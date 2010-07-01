@@ -8,16 +8,22 @@
  *
  * Created on Jun 21, 2010, 9:06:31 AM
  */
-
 package com.java.skripsi;
 
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -26,14 +32,20 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author user
  */
 public class Main extends javax.swing.JFrame {
-    
+
     /** Creates new form Main */
+    private DB db;
+    private File file = null;
+    private DataTableModel dtm;
+
     public Main() {
+        db = new DB();
+        dtm = new DataTableModel(db);
         initComponents();
         setLocationRelativeTo(null);
-        
+        tblData.setModel(dtm);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -101,8 +113,18 @@ public class Main extends javax.swing.JFrame {
         );
 
         btnSimpan.setText("SIMPAN");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         btnHapus.setText("HAPUS");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         tblData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -125,6 +147,11 @@ public class Main extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblData.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDataMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblData);
@@ -368,20 +395,71 @@ public class Main extends javax.swing.JFrame {
         if (result == JFileChooser.APPROVE_OPTION) {
             try {
                 txtGambar.setText(chooser.getSelectedFile().getName());
-                File file = new File("images/"+txtGambar.getText());
+                file = new File("images/" + txtGambar.getText());
                 Image image = Toolkit.getDefaultToolkit().getImage(file.toURI().toURL());
-                ((ImagePanel) pnlGambar).setImage(image);                
+                ((ImagePanel) pnlGambar).setImage(image);
             } catch (MalformedURLException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnBrowseActionPerformed
 
+    private byte[] fileToByteArray(File file) {
+        ByteArrayOutputStream os = null;
+        try {
+            BufferedImage bi = ImageIO.read(file);
+            os = new ByteArrayOutputStream();
+            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
+            encoder.encode(bi);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return os.toByteArray();
+    }
+
+    private void refreshTableData() {
+        dtm = new DataTableModel(db);
+        this.tblData.setModel(dtm);
+    }
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        if (this.txtNama.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama tidak boleh kosong", "Input gagal", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (((ImagePanel) pnlGambar).getImage() == null || txtGambar.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Gambar tidak boleh kosong", "Input gagal", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        FingerPrint fp = new FingerPrint();
+        fp.setNama(this.txtNama.getText());
+        fp.setImage(fileToByteArray(file));
+        fp.setPola("");
+        db.insertData(fp);
+        refreshTableData();
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        if (tblData.getSelectedRow() != -1) {
+            FingerPrint fp = dtm.list.get(tblData.getSelectedRow());
+            db.deleteData(fp.getId());
+            refreshTableData();
+        }else{
+            JOptionPane.showMessageDialog(this, "Seleksi data terlebih dahulu", "Hapus gagal", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
+        FingerPrint fp = dtm.list.get(tblData.getSelectedRow());
+        ((ImagePanel) pnlGambar).setImage(Toolkit.getDefaultToolkit().createImage(fp.getImage()));
+    }//GEN-LAST:event_tblDataMouseClicked
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -398,7 +476,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnBrowseInput;
@@ -430,5 +507,4 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextField txtHasilWaktu;
     private javax.swing.JTextField txtNama;
     // End of variables declaration//GEN-END:variables
-
 }
