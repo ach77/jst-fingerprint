@@ -11,8 +11,13 @@
 
 package com.java.skripsi;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -21,7 +26,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author user
  */
 public class Main extends javax.swing.JFrame {
-
+    
     /** Creates new form Main */
     public Main() {
         initComponents();
@@ -45,7 +50,7 @@ public class Main extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtGambar = new javax.swing.JTextField();
         btnBrowse = new javax.swing.JButton();
-        pnlGambar = new javax.swing.JPanel();
+        pnlGambar = new ImagePanel();
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -76,6 +81,11 @@ public class Main extends javax.swing.JFrame {
         jLabel2.setText("Gambar");
 
         btnBrowse.setText("BROWSE");
+        btnBrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBrowseActionPerformed(evt);
+            }
+        });
 
         pnlGambar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -349,6 +359,23 @@ public class Main extends javax.swing.JFrame {
     private void btnBrowseInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBrowseInputActionPerformed
+
+    private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
+        JFileChooser chooser = new JFileChooser(new File("images"));
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setFileFilter(new ImageFilter());
+        int result = chooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try {
+                txtGambar.setText(chooser.getSelectedFile().getName());
+                File file = new File("images/"+txtGambar.getText());
+                Image image = Toolkit.getDefaultToolkit().getImage(file.toURI().toURL());
+                ((ImagePanel) pnlGambar).setImage(image);                
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnBrowseActionPerformed
 
     /**
     * @param args the command line arguments
