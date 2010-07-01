@@ -131,6 +131,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="BROWSE"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBrowseActionPerformed"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="pnlGambar">
               <Properties>
@@ -140,6 +143,9 @@
                   </Border>
                 </Property>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ImagePanel()"/>
+              </AuxValues>
 
               <Layout>
                 <DimensionLayout dim="0">
