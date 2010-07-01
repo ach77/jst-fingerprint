@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.java.skripsi;
 
 /**
@@ -10,13 +9,13 @@ package com.java.skripsi;
  * @author Andi Taru NNW
  */
 public class FingerPrint {
+
     private int id;
     private String nama;
     private byte[] image;
-    private int pola;
+    private String pola;
 
     public FingerPrint() {
-        
     }
 
     /**
@@ -64,14 +63,14 @@ public class FingerPrint {
     /**
      * @return the pola
      */
-    public int getPola() {
+    public String getPola() {
         return pola;
     }
 
     /**
      * @param pola the pola to set
      */
-    public void setPola(int pola) {
+    public void setPola(String pola) {
         this.pola = pola;
     }
 }
