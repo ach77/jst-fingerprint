@@ -10,10 +10,21 @@ import java.util.Random;
  *
  * @author Omega
  */
-public class Test {
+public class Test2 {
 
     Random r = new Random();
-    static Test test;
+    static Test2 test;
+    int pixel[][] = {
+        {1, 0, 1, 0, 1, 0, 0, 1, 0},
+        {0, 1, 0, 0, 1, 1, 1, 1, 1},
+        {0, 1, 0, 1, 0, 0, 0, 0, 0}};
+
+    public static void main(String[] args) {
+        test = new Test2();
+//        test.multiPerceptron();
+        JSTEngine engine = new JSTEngine();
+        engine.ekstrasiMinutiae(test.pixel);
+    }
 
     public float random(int seed) {
         return r.nextInt() % seed;
@@ -21,11 +32,6 @@ public class Test {
 
     public float sigmoid(float u) {
         return (float) (1 / (1 + Math.exp(u)));
-    }
-
-    public static void main(String[] args) {
-        test = new Test();
-        test.multiPerceptron();
     }
 
     public void multiPerceptron() {
@@ -109,7 +115,7 @@ public class Test {
         }
         z = sigmoid(O[0]);
         System.out.println("z:" + z);
-        if (z <0) {
+        if (z < 0) {
             System.out.println("Output = 0");
         } else {
             System.out.println("Output = 1");
