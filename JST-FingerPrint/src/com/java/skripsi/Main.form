@@ -66,12 +66,17 @@
                                   <Group type="102" alignment="0" attributes="1">
                                       <Component id="pnlGambar" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace pref="32" max="32767" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="btnClear" max="32767" attributes="1"/>
-                                          <Component id="btnSimpan" alignment="0" max="32767" attributes="1"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <Component id="btnSimpan" min="-2" max="-2" attributes="1"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="btnHapus" min="-2" pref="86" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                              <Component id="btnClear" alignment="0" max="32767" attributes="1"/>
+                                              <Component id="btnPreProcess" alignment="0" max="32767" attributes="1"/>
+                                          </Group>
                                       </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btnHapus" min="-2" pref="86" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="1">
                                       <Component id="txtGambar" pref="265" max="32767" attributes="0"/>
@@ -105,6 +110,8 @@
                           <Component id="pnlGambar" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="1" attributes="1">
                               <Component id="btnClear" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnPreProcess" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="btnHapus" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -210,6 +217,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnPreProcess">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="PRE-PROCESS"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPreProcessActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
