@@ -12,6 +12,7 @@ package com.java.skripsi;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -68,6 +69,7 @@ public class Main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblData = new javax.swing.JTable();
         btnClear = new javax.swing.JButton();
+        btnPreProcess = new javax.swing.JButton();
         pnlRecognition = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -164,6 +166,13 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        btnPreProcess.setText("PRE-PROCESS");
+        btnPreProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreProcessActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlDatabaseLayout = new javax.swing.GroupLayout(pnlDatabase);
         pnlDatabase.setLayout(pnlDatabaseLayout);
         pnlDatabaseLayout.setHorizontalGroup(
@@ -181,11 +190,14 @@ public class Main extends javax.swing.JFrame {
                             .addGroup(pnlDatabaseLayout.createSequentialGroup()
                                 .addComponent(pnlGambar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnSimpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlDatabaseLayout.createSequentialGroup()
+                                        .addComponent(btnSimpan)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(btnClear, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnPreProcess, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
                                 .addComponent(txtGambar, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -210,6 +222,8 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(pnlGambar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlDatabaseLayout.createSequentialGroup()
                         .addComponent(btnClear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPreProcess)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnHapus)
@@ -410,7 +424,7 @@ public class Main extends javax.swing.JFrame {
                 txtGambar.setText(chooser.getSelectedFile().getName());
                 file = new File("images/" + txtGambar.getText());
                 Image image = Toolkit.getDefaultToolkit().getImage(file.toURI().toURL());
-                image = ImageUtil.processImage(ImageUtil.ImageToBufferedImage(image, this));
+//                image = ImageUtil.processImage(ImageUtil.ImageToBufferedImage(image, this));
                 ((ImagePanel) pnlGambar).setImage(image);
             } catch (MalformedURLException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -458,7 +472,7 @@ public class Main extends javax.swing.JFrame {
             FingerPrint fp = dtm.list.get(tblData.getSelectedRow());
             db.deleteData(fp.getId());
             refreshTableData();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "Seleksi data terlebih dahulu", "Hapus gagal", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnHapusActionPerformed
@@ -469,10 +483,20 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_tblDataMouseClicked
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        ((ImagePanel)pnlGambar).setImage(null);
+        ((ImagePanel) pnlGambar).setImage(null);
         txtGambar.setText("");
         txtNama.setText("");
     }//GEN-LAST:event_btnClearActionPerformed
+    private void btnPreProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreProcessActionPerformed
+
+        Image image = ((ImagePanel) pnlGambar).getImage();
+        BufferedImage bufImage = ImageUtil.ImageToBufferedImage(image, this);
+        bufImage = ImageUtil.processImage(bufImage);
+        Thresholder.threshold(bufImage);
+        Thinner.thin(bufImage);
+        image = ImageUtil.BufferedImagetoImage(bufImage);
+        ((ImagePanel) pnlGambar).setImage(image);
+    }//GEN-LAST:event_btnPreProcessActionPerformed
 
     /**
      * @param args the command line arguments
@@ -501,6 +525,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnBrowseInput;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnPreProcess;
     private javax.swing.JButton btnRecognize;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JLabel jLabel1;
