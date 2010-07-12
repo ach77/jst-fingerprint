@@ -67,6 +67,7 @@ public class Main extends javax.swing.JFrame {
         btnHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblData = new javax.swing.JTable();
+        btnClear = new javax.swing.JButton();
         pnlRecognition = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -156,6 +157,13 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblData);
 
+        btnClear.setText("CLEAR");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlDatabaseLayout = new javax.swing.GroupLayout(pnlDatabase);
         pnlDatabase.setLayout(pnlDatabaseLayout);
         pnlDatabaseLayout.setHorizontalGroup(
@@ -173,7 +181,9 @@ public class Main extends javax.swing.JFrame {
                             .addGroup(pnlDatabaseLayout.createSequentialGroup()
                                 .addComponent(pnlGambar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                                .addComponent(btnSimpan)
+                                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnSimpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
@@ -196,11 +206,14 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(txtGambar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBrowse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(pnlGambar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnHapus)
-                        .addComponent(btnSimpan)))
+                    .addGroup(pnlDatabaseLayout.createSequentialGroup()
+                        .addComponent(btnClear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnHapus)
+                            .addComponent(btnSimpan))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
                 .addContainerGap())
@@ -397,6 +410,7 @@ public class Main extends javax.swing.JFrame {
                 txtGambar.setText(chooser.getSelectedFile().getName());
                 file = new File("images/" + txtGambar.getText());
                 Image image = Toolkit.getDefaultToolkit().getImage(file.toURI().toURL());
+                image = ImageUtil.processImage(ImageUtil.ImageToBufferedImage(image, this));
                 ((ImagePanel) pnlGambar).setImage(image);
             } catch (MalformedURLException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -454,6 +468,12 @@ public class Main extends javax.swing.JFrame {
         ((ImagePanel) pnlGambar).setImage(Toolkit.getDefaultToolkit().createImage(fp.getImage()));
     }//GEN-LAST:event_tblDataMouseClicked
 
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        ((ImagePanel)pnlGambar).setImage(null);
+        txtGambar.setText("");
+        txtNama.setText("");
+    }//GEN-LAST:event_btnClearActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -479,6 +499,7 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnBrowseInput;
+    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnRecognize;
     private javax.swing.JButton btnSimpan;

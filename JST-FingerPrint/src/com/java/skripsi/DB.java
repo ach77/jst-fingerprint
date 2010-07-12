@@ -7,7 +7,6 @@ package com.java.skripsi;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
@@ -41,10 +40,10 @@ public class DB {
             PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(NULL,?,?,?)");
             psmnt.setString(1, fp.getNama());
             File imgFile = new File("img_"+fp.getNama());
-            FileOutputStream fos = new FileOutputStream(imgFile);
+            /*FileOutputStream fos = new FileOutputStream(imgFile);
             fos.write(fp.getImage());
             fos.flush();
-            fos.close();
+            fos.close();*/
             FileInputStream fis = new FileInputStream(imgFile);
             psmnt.setBinaryStream(2, (InputStream) fis, (int) (fp.getImage().length));
             psmnt.setString(3, fp.getPola());
