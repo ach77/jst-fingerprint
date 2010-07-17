@@ -1,0 +1,9 @@
+1. Pasangan pola
+2. Inisialisasi Bobot
+3. Hitung keluaran system
+4. Hitung error
+5. tidak memenuhi, hitung bobot baru
+6. hitung keluaran
+7. hitung error
+   terpenuhi? selesai
+   tidak terpenuhi? balik ke 5
