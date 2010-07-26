@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 
 /**
@@ -25,7 +26,7 @@ public class ImageUtil {
     public static Image BufferedImagetoImage(BufferedImage bufferedImage) {
         return Toolkit.getDefaultToolkit().createImage(bufferedImage.getSource());
     }
-    
+
     public static BufferedImage createBufferedImage(Image imageIn, int imageType, Component comp) {
         MediaTracker mt = new MediaTracker(comp);
         mt.addImage(imageIn, 0);
@@ -89,5 +90,34 @@ public class ImageUtil {
     // Forces a value to a 0-255 integer range
     public static int clamp(float value) {
         return Math.min(Math.max(Math.round(value), 0), 255);
+    }
+
+    public static int[][] getPixel(Image image) {
+        int result[][] = null;
+        byte[] pixels;
+        int w, h;
+        BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_BYTE_GRAY);
+        Graphics bg = bi.getGraphics();
+        bg.drawImage(image, 0, 0, null);
+        bg.dispose();
+        DataBufferByte dbb = (DataBufferByte) bi.getRaster().getDataBuffer();
+        pixels = dbb.getData(); // masukkan nilai pixel image ke dalam variabel pixels
+        // Ciptakan variabel array 2 dimensi untuk menampung nilai pixel suatu image
+        w = bi.getWidth();
+        h = bi.getHeight();
+        result = new int[h][w];
+
+        int i = 0, j = 0;
+        // Membuat array 2 dimensi untuk setiap image, sesuai dengan ukuran tinggi dan lebar image
+        for (byte pix : pixels) {
+            if (i % w == 0 && i != 0) {
+                j++;
+                i = 0;
+            }
+            int data = ((int) pix) & 0xff;
+            result[j][i] = data;
+            i++;
+        }
+        return result;
     }
 }
