@@ -13,18 +13,16 @@ import java.util.Random;
  */
 public class JSTEngine {
 
-    //    public static final float E = 2.718f;               // konstanta e/bilangan Euler
-    public float lr, targetError = 0, mse = 0;          // learning rate ,targetError, kuadrat target error/MSE(Mean Square Error
-    public int epoch;                                   // jumlah pengulangan maksimum
-    public int jmlHidden, jmlInput;                      // jumlah neuron bias yg digunakan
-    public float[] target, v0, w;                       // input,bobot untuk bias-hidden, hidden-ouutput
-    public float[][] v, x;                              // bobot input-hidden
-    public float w0, y;                                 // bobot w bias-output, output, target
-    public float batasMax, batasMin;                    // batas maksimum/minimum nilai random
-    Random r = new Random();
-    NumberFormat numberFormat;
+    //    public static final float E = 2.718f;             // konstanta e/bilangan Euler
+    public float lr, targetError = 0, mse = 0;              // learning rate ,targetError, kuadrat target error/MSE(Mean Square Error
+    public int epoch, jmlInput, jmlHidden, jmlOutput;       // jumlah pengulangan maksimum,jumlah neuron input,bias,output yg digunakan
+    public float[] v0, w0;                               // bobot bobot bias input-hidden, bobot bias hidden-output,output
+    public float[][] v, w, x, target;                       // bobot input-hidden, bobot hidden-output, input, target
+    public float batasMax, batasMin;                        // batas maksimum/minimum nilai random
+    private Random r = new Random();
+    private NumberFormat numberFormat;
 
-    public JSTEngine(float[][] x, float[] target, float lr, float targetError, int epoch, int jmlInput, int jmlHidden, float batasMin, float batasMax) {
+    public JSTEngine(float[][] x, float[][] target, float lr, float targetError, int epoch, int jmlInput, int jmlHidden, int jmlOutput, float batasMin, float batasMax) {
         numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(5);
         this.x = x;
@@ -34,12 +32,13 @@ public class JSTEngine {
         this.epoch = epoch;
         this.jmlInput = jmlInput;
         this.jmlHidden = jmlHidden;
+        this.jmlOutput = jmlOutput;
         this.batasMax = batasMax;
         this.batasMin = batasMin;
         inisialisasiBobot();
     }
 
-    public void setParameter(float[][] x, float[] target, float lr, float targetError, int epoch, int jmlInput, int jmlHidden, float batasMin, float batasMax) {
+    public void setParameter(float[][] x, float[][] target, float lr, float targetError, int epoch, int jmlInput, int jmlHidden, int jmlOutput, float batasMin, float batasMax) {
         this.x = x;
         this.target = target;
         this.lr = lr;
@@ -47,6 +46,7 @@ public class JSTEngine {
         this.epoch = epoch;
         this.jmlInput = jmlInput;
         this.jmlHidden = jmlHidden;
+        this.jmlOutput = jmlOutput;
         this.batasMax = batasMax;
         this.batasMin = batasMin;
         inisialisasiBobot();
@@ -67,82 +67,64 @@ public class JSTEngine {
     }
 
     void inisialisasiBobot() {
+        //bobot input-hidden
         v = new float[jmlInput][jmlHidden];
-        v[0][0] = 0.9562f;
-        v[0][1] = 0.7762f;
-        v[0][2] = 0.1623f;
-        v[0][3] = 0.2886f;
-        v[1][0] = 0.1962f;
-        v[1][1] = 0.6133f;
-        v[1][2] = 0.0311f;
-        v[1][3] = 0.9711f;
-//        //bobot input-hidden
-//        v = new float[jmlInput][jmlHidden];
         for (int i = 0; i < jmlInput; i++) {
             for (int j = 0; j < jmlHidden; j++) {
-//                v[i][j] = random(batasMin, batasMax);
-//                System.out.println("v[" + i + "][" + j + "]:" + v[i][j]);
+                v[i][j] = random(batasMin, batasMax);
             }
         }
+
+        //bobot bias input-hidden
         v0 = new float[jmlHidden];
-        v0[0] = 0.7496f;
-        v0[1] = 0.3796f;
-        v0[2] = 0.7256f;
-        v0[3] = 0.1628f;
-//        //bobot bias-hidden
-//        v0 = new float[jmlHidden];
         for (int i = 0; i < jmlHidden; i++) {
-//            v0[i] = random(batasMin, batasMax);
-//            System.out.println("v0[" + i + "]:" + v0[i]);
+            v0[i] = random(batasMin, batasMax);
         }
-//
-        w = new float[jmlHidden];
-        w[0] = 0.2280f;
-        w[1] = 0.9585f;
-        w[2] = 0.6799f;
-        w[3] = 0.0550f;
-//        //bobot hidden-output
-//        w = new float[jmlHidden];
+
+        //bobot hidden-output
+        w = new float[jmlHidden][jmlOutput];
         for (int i = 0; i < jmlHidden; i++) {
-//            w[i] = random(batasMin, batasMax);
-//            System.out.println("w[" + i + "]:" + w[i]);
+            for (int j = 0; j < jmlOutput; j++) {
+                w[i][j] = random(batasMin, batasMax);
+            }
         }
-//
-        w0 = 0.9505f;
-//        //bobot bias-output
-//        w0 = random(batasMin, batasMax);
-//        System.out.println("w0:" + w0);
+
+        //bobot bias hidden-output
+        w0 = new float[jmlOutput];
+        for (int i = 0; i < jmlOutput; i++) {
+            w0[i] = random(batasMin, batasMax);
+        }
     }
 
     public void trainingJST() {
+        float error = 0;
         float[] zIn = new float[jmlHidden];
         float[] z = new float[jmlHidden];
-        float yIn, error = 0;
-        float gammaResult, deltaW0;
-        float[] deltaW = new float[jmlHidden];
+        float[] yIn = new float[jmlOutput];
+        float[] y = new float[jmlOutput];
+        float[] gammaOut = new float[jmlOutput];
+        float[][] deltaW = new float[jmlHidden][jmlOutput];
+        float[] deltaW0 = new float[jmlOutput];
         float[] gammaIn = new float[jmlHidden];
         float[] gamma = new float[jmlHidden];
         float[] deltaV0 = new float[jmlHidden];
         float[][] deltaV = new float[jmlInput][jmlHidden];
         int counter = 0;
-        float[] xTemp=null;
+        float[] xTemp = null;
+        float[] tTemp = null;
+        int jmlData = x.length;     // bisa juga dengan target.length
 
         // uji kondisi
         do {
-            for (int n = 0; n < x.length; n++) {
-//                System.out.println("///////////////////////BOBOT AWAL:" + n);
-//                showBobot();
-                if (x.length > 1) {
-                    xTemp = x[n];   // x data ke - n
-                }else{
-                    xTemp=x[0];
-                }
-                /////////////////////// INPUT - HIDDEN - OUTPUT ////////////////
-                //hitung zIn
-                yIn = 0;
+            for (int n = 0; n < jmlData; n++) {
+                // input dan target data ke n
+                xTemp = x[n];
+                tTemp = target[n];
+                /////////////////////// FEED FORWARD PROPAGATION ////////////////
+                //hitung zIn dan z
                 for (int i = 0; i < jmlHidden; i++) {
                     zIn[i] = 0;
-                    for (int j = 0; j < xTemp.length; j++) {
+                    for (int j = 0; j < jmlInput; j++) {
                         zIn[i] += xTemp[j] * v[j][i];
 //                        System.out.println("zIn[" + i + "]=x[" + j + "]*v[" + j + "][" + i + "]=" + xTemp[j] + " * " + v[j][i] + "=" + zIn[i]);
                     }
@@ -150,103 +132,92 @@ public class JSTEngine {
 //                    System.out.println("zIn[" + i + "] = v0[" + i + "] + zIn[" + i + "]=" + v0[i] + " + " + zIn[i] + " =  " + zIn[i]);
                     z[i] = sigmoid(zIn[i]);
 //                    System.out.println("z[" + i + "]:" + z[i]);
-                    yIn += z[i] * w[i];
                 }
-                //hitung yIn dan y
-                yIn = w0 + yIn;
-//                System.out.println("yIn:" + yIn);
-                y = sigmoid(yIn);
-//                System.out.println("y:" + y);
 
-                //////////////////// ERROR, MSE , GAMMA  //////////////////////////
-                //hitung targetError,kuadrat targetError, dan gamma
-                error = target[n] - y;
-                mse = (float) Math.pow(error, 2);
-                gammaResult = (target[n] - y) * sigmoid(yIn) * (1 - sigmoid(yIn));
+                //hitung yIn dan y
+                for (int i = 0; i < jmlOutput; i++) {
+                    yIn[i] = 0;
+                    for (int j = 0; j < jmlHidden; j++) {
+                        yIn[i] += z[j] * w[j][i];
+                    }
+                    yIn[i] = w0[i] + yIn[i];
+                    y[i] = sigmoid(yIn[i]);
+                }
+
+                //////////////////// FEED BACK PROPAGATION  ////////////////////
+                //hitung SSE (Sum Squared Error) dan MSE (Mean Squared Error). MSE = SSE/degree of freedom for error
+                error=0;
+                for (int i = 0; i < jmlOutput; i++) {
+                    error += Math.pow(tTemp[i] - y[i], 2) * 0.5;    //0.5 = degree of freedom for error
+                }
+                mse = error;
                 System.out.println("mse:" + mse);
-//                System.out.println("gamma result:"+gammaResult);
+                // hitung gammaOut
+                for (int i = 0; i < jmlOutput; i++) {
+                    gammaOut[i] = (tTemp[i] - y[i]) * sigmoid(yIn[i]) * (1 - sigmoid(yIn[i]));
+                }
 
                 ///////////////////// PERBAIKAN BOBOT BARU ////////////////////////
-                //hitung deltaW,w baru,deltaW0,w0 baru
+                //hitung deltaW
                 for (int i = 0; i < jmlHidden; i++) {
-                    deltaW[i] = lr * gammaResult * z[i];
-//                    System.out.println("deltaW["+i+"]:"+ deltaW[i]);
+                    for (int j = 0; j < jmlOutput; j++) {
+                        deltaW[i][j] = lr * gammaOut[j] * z[i];
+                    }
                 }
-                deltaW0 = lr * gammaResult;
-                w0 += deltaW0;
-//                System.out.println("deltaW0:"+deltaW0);
-
-
+                //hitung w0
+                for (int i = 0; i < jmlOutput; i++) {
+                    deltaW0[i] = lr * gammaOut[i];
+                }
                 //hitung gammaIn, gamma dan deltaV0
+                gammaIn=new float[jmlHidden];
                 for (int i = 0; i < jmlHidden; i++) {
-                    gammaIn[i] = gammaResult * w[i];
-//                    System.out.println("gammaIn["+i+"]:"+ gammaIn[i]);
+                    for (int j = 0; j < jmlOutput; j++) {
+                        gammaIn[i] += gammaOut[j] * w[i][j];
+                    }
                     gamma[i] = gammaIn[i] * sigmoid(zIn[i]) * (1 - sigmoid(zIn[i]));
-//                    gamma[i] = gammaIn[i] * sigmoid(z[i]) * (1 - sigmoid(z[i]));
-//                    System.out.println("gamma["+i+"]:"+ gamma[i]);
-                    deltaV0[i] = lr * gamma[i];
-//                    System.out.println("deltaV0["+i+"]:"+ deltaV0[i]);
                 }
 
-                //hitung deltaV, v baru, w baru
-                for (int i = 0; i < xTemp.length; i++) {
+                //hitung deltaV
+                for (int i = 0; i < jmlInput; i++) {
                     for (int j = 0; j < jmlHidden; j++) {
-                        deltaV[i][j] = lr * gamma[i] * xTemp[i];
-//                        System.out.println("deltaV["+i+"]["+j+"]:"+deltaV[i][j]);
-                        v[i][j] += deltaV[i][j];
-//                        System.out.println("v["+i+"]["+j+"]:"+v[i][j]);
+                        deltaV[i][j] = lr * gamma[j] * xTemp[i];
                     }
                 }
 
-                //hitung w baru,v0 baru
+                // hitung deltaV0
                 for (int i = 0; i < jmlHidden; i++) {
-                    v0[i] += deltaV0[i];
-//                    System.out.println("v0["+i+"]:"+v0[i]);
-                    w[i] += deltaW[i];
-//                    System.out.println("w["+i+"]:"+w[i]);
+                    deltaV0[i] = lr * gamma[i];
+
                 }
-//                System.out.println("w0:"+w0);
-//                 System.out.println("////////////// BOBOT AKHIR:"+n);
-//                 showBobot();
+                //hitung w baru
+                for (int i = 0; i < jmlHidden; i++) {
+                    for (int j = 0; j < jmlOutput; j++) {
+                        w[i][j] += deltaW[i][j];
+                    }
+                }
+                //hitung v baru
+                for (int i = 0; i < jmlInput; i++) {
+                    for (int j = 0; j < jmlHidden; j++) {
+                        v[i][j] += deltaV[i][j];
+                    }
+                }
                 if (mse < targetError) {
                     System.out.println("break epoch ke -" + epoch);
                     break;
                 }
             }
             counter++;
-            System.out.println("mse:" + mse);
         } while (mse > targetError && counter < epoch);
         System.out.println("epoch:" + counter);
         System.out.println("////////////////// BOBOT FINAL:");
         showBobot();
     }
 
-    public boolean recognizeJST(float[] input, float target) {
-//        v[0][0] = 5.8716f;
-//        v[0][1] = 3.6067f;
-//        v[0][2] = 3.4877f;
-//        v[0][3] = -0.0704f;
-//        v[1][0] = -4.8532f;
-//        v[1][1] = 2.8028f;
-//        v[1][2] = -5.1943f;
-//        v[1][3] = 0.7636f;
-//
-//        v0[0] = 2.4618f;
-//        v0[1] = -0.3884f;
-//        v0[2] = -1.4258f;
-//        v0[3] = -0.6994f;
-//
-//        w[0] = -7.0997f;
-//        w[1] = 3.5782f;
-//        w[2] = 6.9212f;
-//        w[3] = -0.7503f;
-//
-//        w0 = 0.6571f;
-
+    public float[] recognizeJST(float[] input, float target) {
         float[] zIn = new float[jmlHidden];
         float[] z = new float[jmlHidden];
-        float yIn = 0, yResult;
-        boolean valid = false;
+        float[] yIn = new float[jmlOutput];
+        float[] y = new float[jmlOutput];
         //hitung zIn, z,yIn, y result
         for (int i = 0; i < jmlHidden; i++) {
             zIn[i] = 0;
@@ -255,20 +226,18 @@ public class JSTEngine {
             }
             zIn[i] = v0[i] + zIn[i];
             z[i] = sigmoid(zIn[i]);
-            yIn += z[i] * w[i];
         }
-        yIn = w0 + yIn;
-        yResult = sigmoid(yIn);
 
-        //menentukan cocok atau tidak cocok
-        System.out.println("yResult=" + yResult);
-        float result = Math.abs(yResult - target);
-        if (result < 0.5f) {
-            valid = true;
-        } else {
-            valid = false;
+        for (int i = 0; i < jmlOutput; i++) {
+            yIn[i] = 0;
+            for (int j = 0; j < jmlHidden; j++) {
+                yIn[i] += z[j] * w[j][i];
+            }
+            yIn[i] += w0[i];
+            y[i] = sigmoid(yIn[i]);
         }
-        return valid;
+
+        return y;
     }
 
     public void showBobot() {
@@ -282,8 +251,12 @@ public class JSTEngine {
             System.out.println("v0[" + i + "]:" + v0[i]);
         }
         for (int i = 0; i < jmlHidden; i++) {
-            System.out.println("w[" + i + "]:" + w[i]);
+            for (int j = 0; j < jmlOutput; j++) {
+                System.out.println("w[" + i + "][" + j + "]:" + w[i][j]);
+            }
         }
-        System.out.println("w0:" + w0);
+        for (int i = 0; i < jmlOutput; i++) {
+            System.out.println("w0[" + i + "]:" + w0[i]);
+        }
     }
 }
