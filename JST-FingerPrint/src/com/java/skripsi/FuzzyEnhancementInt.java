@@ -6,7 +6,6 @@
 package com.java.skripsi;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -26,21 +25,13 @@ public class FuzzyEnhancementInt {
     private ArrayList<Double> listLevel = new ArrayList<Double>();
     
     public FuzzyEnhancementInt(BufferedImage image) {
-        this.src   = image;
+        this.src        = image;
         this.width      = image.getWidth();
         this.height     = image.getHeight();
         convertToGray();
     }    
 
-    private void convertToGray() {
-        /*BufferedImage bi = new BufferedImage(
-                this.src.getWidth(),
-                this.src.getHeight(),
-                BufferedImage.TYPE_BYTE_GRAY);
-        Graphics bg = bi.getGraphics();
-        bg.drawImage(this.src, 0, 0, null);
-        bg.dispose();
-        this.dst = bi;*/
+    private void convertToGray() {        
         int c, r, g, b;
 
         BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_BYTE_GRAY);
@@ -88,8 +79,12 @@ public class FuzzyEnhancementInt {
         this.minLevel = listLevel.get(0);
         this.maxLevel = listLevel.get(listLevel.size()-1);
 
-        double jarak = maxLevel - minLevel;
-        this.middleLevel = minLevel+jarak;
+        double jarak = (maxLevel - minLevel)/3;
+        this.middleLevel = maxLevel-(int)jarak;
+
+        System.out.println("Min Level: " + minLevel);
+        System.out.println("Max Level: " + maxLevel);
+        System.out.println("Middle Level: " + middleLevel);
     }   
 
     public void processEnhancement() {
@@ -98,24 +93,35 @@ public class FuzzyEnhancementInt {
         for (int x=0; x<this.width; x++) {
             for (int y=0; y<this.height;y++) {
                 
-                Color color = new Color(this.dst.getRGB(x, y));
+                Color color = new Color(this.src.getRGB(x, y));
                 int r = color.getRed();
                 int g = color.getGreen();
                 int b = color.getBlue();
-                double rgb = (r+g+b)/3;
+                double rgb = (r+g+b)/3;                
 
-                /*
-                Color c = new Color((int)rgb);
-                this.dst.setRGB(x, y, src.getRGB(x,y));
-                */
+                double FACTOR = rgb/255;
 
-                /*if (rgb < middleLevel)
-                    this.dst.setRGB(x, y, Color.BLACK.getRGB());
-                else
-                    this.dst.setRGB(x, y, Color.WHITE.getRGB());
-                */
+                if (rgb < middleLevel) {
+                    this.dst.setRGB(x, y, darkerColor(color,FACTOR).getRGB());
+                } else {
+                    this.dst.setRGB(x, y, brighterColor(color,FACTOR).getRGB());
+                }
             }
         }
+
+        this.src = this.dst;
+    }
+
+    public Color darkerColor(Color color, double FACTOR) {
+        return new Color(Math.max((int)(color.getRed()  *FACTOR), 0),
+			 Math.max((int)(color.getGreen()*FACTOR), 0),
+			 Math.max((int)(color.getBlue() *FACTOR), 0));
+    }
+
+    public Color brighterColor(Color color,double FACTOR) {
+        return new Color(Math.min((int)(color.getRed()  /FACTOR), 255),
+                         Math.min((int)(color.getGreen()/FACTOR), 255),
+                         Math.min((int)(color.getBlue() /FACTOR), 255));
     }
 
     public BufferedImage getEnhancementImage() {
@@ -124,12 +130,12 @@ public class FuzzyEnhancementInt {
 
     public static void main(String[] args) {
         try {
-            BufferedImage buffImage = ImageIO.read(new File("finta3.jpg"));
+            BufferedImage buffImage = ImageIO.read(new File("input.png"));
 
             FuzzyEnhancementInt fei = new FuzzyEnhancementInt(buffImage);            
             fei.processEnhancement();
 
-            ImageIO.write(fei.getEnhancementImage(), "jpg", new File("finta3_result.jpg"));
+            ImageIO.write(fei.getEnhancementImage(), "jpg", new File("input_result.jpg"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
