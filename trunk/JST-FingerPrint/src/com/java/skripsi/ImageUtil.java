@@ -115,7 +115,36 @@ public class ImageUtil {
                 i = 0;
             }
             int data = ((int) pix) & 0xff;
-            result[j][i] = data;
+            result[j][i] = data;            
+            i++;
+        }
+        return result;
+    }
+
+    public static int[][] ImageToBiner(Image image) {
+        int result[][] = null;
+        byte[] pixels;
+        int w, h;
+        BufferedImage bi = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_BYTE_GRAY);
+        Graphics bg = bi.getGraphics();
+        bg.drawImage(image, 0, 0, null);
+        bg.dispose();
+        DataBufferByte dbb = (DataBufferByte) bi.getRaster().getDataBuffer();
+        pixels = dbb.getData();
+        w = bi.getWidth();
+        h = bi.getHeight();
+        result = new int[h][w];
+
+        int i = 0, j = 0;        
+        for (byte pix : pixels) {
+            if (i % w == 0 && i != 0) {
+                j++;
+                i = 0;
+            }
+            int data = ((int) pix) & 0xff;
+            if (data <= 127) result[j][i] = 1;
+            else result[j][i] = 0;
+            System.out.println("j="+j+",i="+i+","+result[j][i]);
             i++;
         }
         return result;
