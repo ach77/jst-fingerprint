@@ -35,15 +35,25 @@ public class DB {
         }
     }
 
+    public int getNewId() {
+        int id = -1;
+        try {
+            PreparedStatement psmnt = connection.prepareStatement("select max(id_fp) from tbl_fp");
+            ResultSet rs = psmnt.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id+1;
+    }
+
     public void insertData(FingerPrint fp) {
         try {
             PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(NULL,?,?,?)");
             psmnt.setString(1, fp.getNama());
-            File imgFile = new File("img_"+fp.getNama());
-            /*FileOutputStream fos = new FileOutputStream(imgFile);
-            fos.write(fp.getImage());
-            fos.flush();
-            fos.close();*/
+            File imgFile = new File("img_" + fp.getNama());
             FileInputStream fis = new FileInputStream(imgFile);
             psmnt.setBinaryStream(2, (InputStream) fis, (int) (fp.getImage().length));
             psmnt.setString(3, fp.getPola());

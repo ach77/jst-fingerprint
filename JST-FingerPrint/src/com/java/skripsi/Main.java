@@ -12,10 +12,14 @@ package com.java.skripsi;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -31,8 +35,12 @@ public class Main extends javax.swing.JFrame {
 
     /** Creates new form Main */
     private DB db;
-    private File file = null;
+    private JSTEngine jSTEngine;
+    private ImageProcessor imageProcessor;
+    private File fileTmp = null;
+    private List<File> listFileTmp;
     private DataTableModel dtm;
+    private Parameter param;
 
     public Main() {
         db = new DB();
@@ -40,6 +48,22 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         tblData.setModel(dtm);
+        param = new Parameter();
+        jSTEngine = new JSTEngine();
+        imageProcessor = new ImageProcessor();
+
+        //konfigurasi panel input
+        setParameter(param);
+        listFileTmp = new ArrayList<File>();
+    }
+
+    public void setParameter(Parameter param) {
+        this.txtMaxEpoch.setText(String.valueOf(param.getMaxEpoch()));
+        this.txtTargetError.setText(String.valueOf(param.getTarget()));
+        this.txtLR.setText(String.valueOf(param.getLearningRate()));
+        this.txtJmlHiddenLayer.setText(String.valueOf(param.getNumHiddenLayer()));
+        this.txtMinRandom.setText(String.valueOf(param.getMinRandom()));
+        this.txtMaxRandom.setText(String.valueOf(param.getMaxRandom()));
     }
 
     /** This method is called from within the constructor to
@@ -52,20 +76,40 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        pnlInput = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        txtMaxEpoch = new javax.swing.JTextField();
+        txtTargetError = new javax.swing.JTextField();
+        txtLR = new javax.swing.JTextField();
+        txtJmlHiddenLayer = new javax.swing.JTextField();
+        txtMinRandom = new javax.swing.JTextField();
+        txtMaxRandom = new javax.swing.JTextField();
+        cbDefaultParam = new javax.swing.JCheckBox();
+        jPanel8 = new javax.swing.JPanel();
+        txtBrowseImage = new javax.swing.JTextField();
+        btRemove = new javax.swing.JButton();
+        btAdd = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        listLearningSet = new javax.swing.JList();
+        btBrowse = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        txtNama = new javax.swing.JTextField();
+        btTraining = new javax.swing.JButton();
+        btLog = new javax.swing.JButton();
+        btSave = new javax.swing.JButton();
+        jLabel18 = new javax.swing.JLabel();
         pnlDatabase = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        txtDataNama = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        txtDataGambar = new javax.swing.JTextField();
-        btnDataProses = new javax.swing.JButton();
         btnDataSimpan = new javax.swing.JButton();
         btnDataHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblData = new javax.swing.JTable();
-        jLabel14 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        txtDataBobot = new javax.swing.JTextArea();
-        btnDataTambah = new javax.swing.JButton();
         btnDataClear = new javax.swing.JButton();
         pnlRecognition = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -78,27 +122,27 @@ public class Main extends javax.swing.JFrame {
         btnBrowseInput = new javax.swing.JButton();
         pnlGambarInput = new javax.swing.JPanel();
         btnRecognize = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        pnlTes = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         txtBrowseTes = new javax.swing.JTextField();
         btnBrowseTest = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         pnlTesOri = new ImagePanel();
-        pnlTesFuzzy = new javax.swing.JPanel();
-        pnlTesThreshold = new javax.swing.JPanel();
+        pnlTesFuzzy = new ImagePanel();
+        pnlTesThreshold = new ImagePanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
+        pnlTesThinning = new ImagePanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        pnlSlice1 = new javax.swing.JPanel();
-        pnlSlice2 = new javax.swing.JPanel();
-        pnlSlice3 = new javax.swing.JPanel();
-        pnlSlice4 = new javax.swing.JPanel();
-        pnlSlice5 = new javax.swing.JPanel();
-        pnlSlice6 = new javax.swing.JPanel();
-        pnlSlice7 = new javax.swing.JPanel();
+        pnlSlice1 = new ImagePanel();
+        pnlSlice2 = new ImagePanel();
+        pnlSlice3 = new ImagePanel();
+        pnlSlice4 = new ImagePanel();
+        pnlSlice5 = new ImagePanel();
+        pnlSlice6 = new ImagePanel();
+        pnlSlice7 = new ImagePanel();
         lblSlice1 = new javax.swing.JLabel();
         lblSlice2 = new javax.swing.JLabel();
         lblSlice3 = new javax.swing.JLabel();
@@ -106,13 +150,13 @@ public class Main extends javax.swing.JFrame {
         lblSlice5 = new javax.swing.JLabel();
         lblSlice6 = new javax.swing.JLabel();
         lblSlice7 = new javax.swing.JLabel();
-        pnlSlice8 = new javax.swing.JPanel();
-        pnlSlice9 = new javax.swing.JPanel();
-        pnlSlice10 = new javax.swing.JPanel();
-        pnlSlice11 = new javax.swing.JPanel();
-        pnlSlice12 = new javax.swing.JPanel();
-        pnlSlice13 = new javax.swing.JPanel();
-        pnlSlice14 = new javax.swing.JPanel();
+        pnlSlice8 = new ImagePanel();
+        pnlSlice9 = new ImagePanel();
+        pnlSlice10 = new ImagePanel();
+        pnlSlice11 = new ImagePanel();
+        pnlSlice12 = new ImagePanel();
+        pnlSlice13 = new ImagePanel();
+        pnlSlice14 = new ImagePanel();
         lblSlice8 = new javax.swing.JLabel();
         lblSlice9 = new javax.swing.JLabel();
         lblSlice10 = new javax.swing.JLabel();
@@ -120,11 +164,11 @@ public class Main extends javax.swing.JFrame {
         lblSlice13 = new javax.swing.JLabel();
         lblSlice12 = new javax.swing.JLabel();
         lblSlice14 = new javax.swing.JLabel();
-        pnlSlice15 = new javax.swing.JPanel();
-        pnlSlice16 = new javax.swing.JPanel();
-        pnlSlice17 = new javax.swing.JPanel();
-        pnlSlice18 = new javax.swing.JPanel();
-        pnlSlice19 = new javax.swing.JPanel();
+        pnlSlice15 = new ImagePanel();
+        pnlSlice16 = new ImagePanel();
+        pnlSlice17 = new ImagePanel();
+        pnlSlice18 = new ImagePanel();
+        pnlSlice19 = new ImagePanel();
         lblSlice15 = new javax.swing.JLabel();
         lblSlice16 = new javax.swing.JLabel();
         lblSlice17 = new javax.swing.JLabel();
@@ -134,20 +178,236 @@ public class Main extends javax.swing.JFrame {
         txtBobotTes = new javax.swing.JTextArea();
         btnClearTes = new javax.swing.JButton();
         btnTesTraining = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JST-Fuzzy FingerPrint");
 
-        jLabel1.setText("Nama");
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Konfigurasi Paramter"));
 
-        jLabel2.setText("Gambar");
+        jLabel4.setText("Maksimum Epoch");
 
-        btnDataProses.setText("PROSES TRAINING");
-        btnDataProses.addActionListener(new java.awt.event.ActionListener() {
+        jLabel5.setText("Target Error");
+
+        jLabel6.setText("Learning Rate");
+
+        jLabel7.setText("Jumlah Hidden Layer");
+
+        jLabel8.setText("Minimum Random");
+
+        jLabel15.setText("Maksimum Random");
+
+        txtTargetError.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDataProsesActionPerformed(evt);
+                txtTargetErrorActionPerformed(evt);
             }
         });
+
+        txtMaxRandom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMaxRandomActionPerformed(evt);
+            }
+        });
+
+        cbDefaultParam.setText("Use Default Parameter");
+        cbDefaultParam.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cbDefaultParamStateChanged(evt);
+            }
+        });
+        cbDefaultParam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbDefaultParamActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel8))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(cbDefaultParam)
+                        .addContainerGap())
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtMaxRandom, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                            .addComponent(txtMinRandom, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                            .addComponent(txtJmlHiddenLayer, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                            .addComponent(txtLR, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                            .addComponent(txtTargetError, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                            .addComponent(txtMaxEpoch, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE))
+                        .addGap(236, 236, 236))))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cbDefaultParam)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMaxEpoch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTargetError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtLR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtJmlHiddenLayer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMinRandom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMaxRandom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addContainerGap())
+        );
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Input Image"));
+
+        btRemove.setText("REMOVE");
+        btRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRemoveActionPerformed(evt);
+            }
+        });
+
+        btAdd.setText("ADD");
+        btAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAddActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("Image");
+
+        jScrollPane5.setViewportView(listLearningSet);
+
+        btBrowse.setText("BROWSE");
+        btBrowse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBrowseActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Nama");
+
+        btTraining.setText("TRAINING PROCESS");
+        btTraining.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btTrainingActionPerformed(evt);
+            }
+        });
+
+        btLog.setText("LOG TRAINING");
+
+        btSave.setText("SIMPAN KE DATABASE");
+
+        jLabel18.setText("Learning Set");
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(btLog)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btSave))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel18))
+                        .addGap(63, 63, 63)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btTraining, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                            .addComponent(txtNama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addComponent(btRemove)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtBrowseImage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btBrowse)
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel18))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtBrowseImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btBrowse))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btAdd)
+                            .addComponent(btRemove))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btTraining)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btLog)
+                    .addComponent(btSave))
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout pnlInputLayout = new javax.swing.GroupLayout(pnlInput);
+        pnlInput.setLayout(pnlInputLayout);
+        pnlInputLayout.setHorizontalGroup(
+            pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pnlInputLayout.setVerticalGroup(
+            pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Input & Parameter", pnlInput);
 
         btnDataSimpan.setText("SIMPAN DATA");
         btnDataSimpan.addActionListener(new java.awt.event.ActionListener() {
@@ -193,19 +453,6 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblData);
 
-        jLabel14.setText("Bobot");
-
-        txtDataBobot.setColumns(20);
-        txtDataBobot.setRows(5);
-        jScrollPane3.setViewportView(txtDataBobot);
-
-        btnDataTambah.setText("TAMBAH KE DATABASE");
-        btnDataTambah.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDataTambahActionPerformed(evt);
-            }
-        });
-
         btnDataClear.setText("CLEAR SELEKSI");
         btnDataClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -218,59 +465,29 @@ public class Main extends javax.swing.JFrame {
         pnlDatabaseLayout.setHorizontalGroup(
             pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDatabaseLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
-                    .addGroup(pnlDatabaseLayout.createSequentialGroup()
-                        .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel14))
-                        .addGap(24, 24, 24)
-                        .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlDatabaseLayout.createSequentialGroup()
-                                .addComponent(btnDataTambah)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDataSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDataHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDataClear, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
-                                .addComponent(txtDataGambar, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDataProses))
-                            .addComponent(txtDataNama, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
+                        .addGap(220, 220, 220)
+                        .addComponent(btnDataSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDataHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDataClear, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlDatabaseLayout.setVerticalGroup(
             pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDatabaseLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtDataNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtDataGambar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDataProses))
-                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlDatabaseLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jLabel14))
-                    .addGroup(pnlDatabaseLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDataTambah)
-                    .addComponent(btnDataSimpan)
                     .addComponent(btnDataHapus)
-                    .addComponent(btnDataClear))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
+                    .addComponent(btnDataClear)
+                    .addComponent(btnDataSimpan))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -311,7 +528,7 @@ public class Main extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -361,14 +578,14 @@ public class Main extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtGambarInput, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+                        .addComponent(txtGambarInput, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBrowseInput, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
                         .addGap(135, 135, 135)
                         .addComponent(pnlGambarInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addComponent(btnRecognize, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+            .addComponent(btnRecognize, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -424,8 +641,8 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("JST Image Recognition", pnlRecognition);
 
-        jPanel1.setMinimumSize(new java.awt.Dimension(150, 150));
-        jPanel1.setPreferredSize(new java.awt.Dimension(150, 150));
+        pnlTes.setMinimumSize(new java.awt.Dimension(150, 150));
+        pnlTes.setPreferredSize(new java.awt.Dimension(150, 150));
 
         jLabel9.setText("Inputkan Gambar");
 
@@ -496,17 +713,17 @@ public class Main extends javax.swing.JFrame {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Threshold Image");
 
-        jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel9.setPreferredSize(new java.awt.Dimension(150, 150));
+        pnlTesThinning.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pnlTesThinning.setPreferredSize(new java.awt.Dimension(150, 150));
 
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pnlTesThinningLayout = new javax.swing.GroupLayout(pnlTesThinning);
+        pnlTesThinning.setLayout(pnlTesThinningLayout);
+        pnlTesThinningLayout.setHorizontalGroup(
+            pnlTesThinningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 148, Short.MAX_VALUE)
         );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        pnlTesThinningLayout.setVerticalGroup(
+            pnlTesThinningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 148, Short.MAX_VALUE)
         );
 
@@ -536,7 +753,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(pnlTesThreshold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(pnlTesThinning, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -554,9 +771,7 @@ public class Main extends javax.swing.JFrame {
                             .addComponent(jLabel11)
                             .addComponent(jLabel12)
                             .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                    .addComponent(pnlTesThinning, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -1065,7 +1280,7 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        btnClearTes.setText("CEAR");
+        btnClearTes.setText("CLEAR");
         btnClearTes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearTesActionPerformed(evt);
@@ -1079,54 +1294,64 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        jLabel19.setText("Target (6 digit biner)");
+
+        javax.swing.GroupLayout pnlTesLayout = new javax.swing.GroupLayout(pnlTes);
+        pnlTes.setLayout(pnlTesLayout);
+        pnlTesLayout.setHorizontalGroup(
+            pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlTesLayout.createSequentialGroup()
+                        .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTesLayout.createSequentialGroup()
+                        .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel19))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBrowseTes, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                        .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                            .addComponent(txtBrowseTes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBrowseTest)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnTesTraining)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnClearTes, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25))))
+                        .addGap(27, 27, 27))))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        pnlTesLayout.setVerticalGroup(
+            pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(txtBrowseTes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClearTes)
                     .addComponent(btnTesTraining)
                     .addComponent(btnBrowseTest))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Tes Proses", jPanel1);
+        jTabbedPane1.addTab("Tes Proses", pnlTes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1141,46 +1366,6 @@ public class Main extends javax.swing.JFrame {
     private void btnBrowseInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBrowseInputActionPerformed
-
-    private void btnDataProsesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataProsesActionPerformed
-        // parsing gambar
-        String gambar = txtDataGambar.getText();
-        String imgs[] = gambar.split(",");
-
-        if (imgs.length > 0) {
-            File files[] = new File[imgs.length];
-            BufferedImage bis[] = new BufferedImage[imgs.length];
-            
-            // ambil gambar-gambar
-            for (int i=0; i<imgs.length; i++) {
-                try {
-                    files[i] = new File(imgs[i]);
-                    bis[i] = ImageIO.read(files[i]);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            // lakukan fuzzy
-            for (int i=0; i<imgs.length; i++) {
-                FuzzyEnhancementInt f = new FuzzyEnhancementInt(bis[i]);
-                f.processEnhancement();
-                bis[i] = f.getEnhancementImage();
-            }
-
-            // lakukan threshold
-            for (int i=0; i<imgs.length; i++) {
-                Thresholder.threshold(bis[i]);
-            }
-
-            // lakukan thinning
-            for (int i=0; i<imgs.length; i++) {
-                Thinner.thin(bis[i]);
-            }
-            
-            // lakukan training JST berdasarkan inputan gambar
-        }
-    }//GEN-LAST:event_btnDataProsesActionPerformed
 
     private byte[] fileToByteArray(File file) {
         ByteArrayOutputStream os = null;
@@ -1201,20 +1386,13 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void btnDataSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataSimpanActionPerformed
-        
     }//GEN-LAST:event_btnDataSimpanActionPerformed
 
     private void btnDataHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataHapusActionPerformed
-
     }//GEN-LAST:event_btnDataHapusActionPerformed
 
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
-        
     }//GEN-LAST:event_tblDataMouseClicked
-
-    private void btnDataTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataTambahActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDataTambahActionPerformed
 
     private void btnDataClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataClearActionPerformed
         // TODO add your handling code here:
@@ -1229,25 +1407,214 @@ public class Main extends javax.swing.JFrame {
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jfc.showOpenDialog(this);
 
-        if (jfc.getSelectedFile() != null) {
-            txtBrowseTes.setText(jfc.getSelectedFile().getName());
+        try {
+            if (jfc.getSelectedFile() != null) {
+                txtBrowseTes.setText(jfc.getSelectedFile().getName());
+                Image image = Toolkit.getDefaultToolkit().getImage(jfc.getSelectedFile().toURI().toURL());
+                ((ImagePanel) pnlTesOri).setImage(image);
+            }
+        } catch (Exception e) {
         }
     }//GEN-LAST:event_btnBrowseTestActionPerformed
 
     private void btnTesTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesTrainingActionPerformed
-        try {
-            File fileBrowse = new File("images/"+txtBobotTes.getText());
-            System.out.println("FILE ADA = " + fileBrowse.exists());
-            BufferedImage bf = ImageIO.read(fileBrowse);
-            ((ImagePanel) pnlTesOri).setImage(bf);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        Image imgTes = ((ImagePanel) pnlTesOri).getImage();
+        BufferedImage bis = ImageUtil.ImageToBufferedImage(imgTes, this);
+
+        //fuzzy enhancement
+        FuzzyEnhancementInt f = new FuzzyEnhancementInt(bis);
+        f.processEnhancement();
+        bis = f.getEnhancementImage();
+        ((ImagePanel) pnlTesFuzzy).setImage(imgTes);
+
+        //threshold
+        Thresholder.threshold(bis);
+        ((ImagePanel) pnlTesThreshold).setImage(imgTes);
+
+        //thinning
+        Thinner.thin(bis);
+         ((ImagePanel) pnlTesThinning).setImage(imgTes);
+
+         //jadikan gambar menjadi grayscale
+         int[][]data=ImageUtil.ImageToBiner(imgTes);
+         for (int i = 0; i < data.length; i++) {
+             for (int j = 0; j < data[i].length; j++) {
+                 System.out.print(data[i][j]);
+             }
+             System.out.println("");
         }
+
+         //slice menjadi 19 bagian
+
     }//GEN-LAST:event_btnTesTrainingActionPerformed
 
     private void btnClearTesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearTesActionPerformed
-        
     }//GEN-LAST:event_btnClearTesActionPerformed
+
+    private void txtTargetErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTargetErrorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTargetErrorActionPerformed
+
+    private void txtMaxRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaxRandomActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMaxRandomActionPerformed
+
+    private void cbDefaultParamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDefaultParamActionPerformed
+    }//GEN-LAST:event_cbDefaultParamActionPerformed
+
+    /**
+     * check box untuk mengeset default parameter
+     * @param evt
+     */
+    private void cbDefaultParamStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbDefaultParamStateChanged
+        boolean enable = this.cbDefaultParam.isSelected();
+        if (enable) {
+            param.setToDefault();
+            setParameter(param);
+        }
+        this.txtMaxEpoch.setEnabled(!enable);
+        this.txtTargetError.setEnabled(!enable);
+        this.txtLR.setEnabled(!enable);
+        this.txtJmlHiddenLayer.setEnabled(!enable);
+        this.txtMinRandom.setEnabled(!enable);
+        this.txtMaxRandom.setEnabled(!enable);
+    }//GEN-LAST:event_cbDefaultParamStateChanged
+
+    /**
+     * Browse gambar untuk menentukan gambar inputan
+     * @param evt
+     */
+    private void btBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBrowseActionPerformed
+        JFileChooser jfc = new JFileChooser(new File("images"));
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.showOpenDialog(this);
+
+        if (jfc.getSelectedFile() != null) {
+            txtBrowseImage.setText(jfc.getSelectedFile().getAbsolutePath());
+            fileTmp = jfc.getSelectedFile();
+        }
+    }//GEN-LAST:event_btBrowseActionPerformed
+
+    /**
+     * tambah gambar ke dalam listFileTmp
+     * @param evt
+     */
+    private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
+        listFileTmp.add(fileTmp);
+        String[] filenames = new String[listFileTmp.size()];
+        for (int i = 0; i < listFileTmp.size(); i++) {
+            filenames[i] = ((File) listFileTmp.get(i)).getAbsolutePath();
+        }
+        this.listLearningSet.setListData(filenames);
+        this.txtBrowseImage.setText("");
+        fileTmp = null;
+    }//GEN-LAST:event_btAddActionPerformed
+
+    /**
+     * hapus gambar dari listFileTmp
+     * @param evt
+     */
+    private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
+        listFileTmp.remove(listFileTmp.size() - 1);
+        String[] filenames = new String[listFileTmp.size()];
+        for (int i = 0; i < listFileTmp.size(); i++) {
+            filenames[i] = ((File) listFileTmp.get(i)).getAbsolutePath();
+        }
+        this.listLearningSet.setListData(filenames);
+    }//GEN-LAST:event_btRemoveActionPerformed
+
+    /**
+     * tahap pelatihan jst. memasukkan gambar sebagai training set dan menghasilkan bobot.
+     * @param evt
+     */
+    private void btTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTrainingActionPerformed
+        int jmlLearningSet = listFileTmp.size();
+        // persiapkan target berupa angka biner. bersifat unik, didapatkan dari id max di database ditambah 1
+        int newId = db.getNewId();
+        String targetBiner = Converter.decimalToBinary(newId, 6);
+        double[] tmpTarget = new double[targetBiner.length()];
+        double[][] target = new double[jmlLearningSet][6];
+        for (int i = 0; i < targetBiner.length(); i++) {
+            tmpTarget[i] = Double.parseDouble(String.valueOf(targetBiner.charAt(i)));
+        }
+        //membentuk target menjadi array 2 dimensi
+        for (int i = 0; i < jmlLearningSet; i++) {
+            for (int j = 0; j < targetBiner.length(); j++) {
+                target[i][j] = Double.parseDouble(String.valueOf(targetBiner.charAt(j)));
+            }
+        }
+
+
+        //proses gambar yg ada di listFileTmp (gambar learning set)
+        if (jmlLearningSet > 0) {
+            File files[] = new File[jmlLearningSet];
+            for (int i = 0; i < listFileTmp.size(); i++) {
+                files[i] = (File) listFileTmp.get(i);
+            }
+            BufferedImage bis[] = new BufferedImage[jmlLearningSet];
+
+            // ambil gambar-gambar
+            for (int i = 0; i < jmlLearningSet; i++) {
+                try {
+                    bis[i] = ImageIO.read(files[i]);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            // lakukan fuzzy
+            for (int i = 0; i < jmlLearningSet; i++) {
+                FuzzyEnhancementInt f = new FuzzyEnhancementInt(bis[i]);
+                f.processEnhancement();
+                bis[i] = f.getEnhancementImage();
+            }
+
+            // lakukan threshold
+            for (int i = 0; i < jmlLearningSet; i++) {
+                Thresholder.threshold(bis[i]);
+            }
+
+            // lakukan thinning
+            for (int i = 0; i < jmlLearningSet; i++) {
+                Thinner.thin(bis[i]);
+            }
+
+            // ambil data pixel gambar
+            int[][] pixelTmp;
+            double[] tmpX = new double[19];
+            List<double[]> listX = new ArrayList<double[]>();
+            for (int i = 0; i < jmlLearningSet; i++) {
+                pixelTmp = ImageUtil.getPixel(bis[i]);
+                //potong2 gambar menjadi 19 bagian simpan ke listX
+                tmpX = imageProcessor.divideImageArray(pixelTmp);
+                listX.add(tmpX);
+            }
+
+//            // siapkan input x menjadi array 2 dimensi
+//            double[][] x = new double[listX.size()][19];
+//            for (int i = 0; i < listX.size(); i++) {
+//                tmpX = listX.get(i);
+//                for (int j = 0; j < tmpX.length; j++) {
+//                    x[i][j] = tmpX[i];
+//                    System.out.println("x[i][j]="+x[i][j]);
+//                }
+//            }
+
+            //lakukan training berdasar parameter, input dan target yg telah dihitung sebelumnya
+//            jSTEngine.setParameter(
+//                    x, // data input
+//                    target, // data target
+//                    Float.parseFloat(this.txtLR.getText()), // learning rate
+//                    Float.parseFloat(this.txtTargetError.getText()), // target error
+//                    Integer.parseInt(this.txtMaxEpoch.getText()), // max epoch
+//                    19, // jml input
+//                    Integer.parseInt(this.txtJmlHiddenLayer.getText()), // jml hidden
+//                    6, // jml output
+//                    Float.parseFloat(this.txtMinRandom.getText()), // min random
+//                    Float.parseFloat(this.txtMaxRandom.getText()));       //max random
+//            jSTEngine.trainingJST();
+        }
+    }//GEN-LAST:event_btTrainingActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1272,37 +1639,50 @@ public class Main extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAdd;
+    private javax.swing.JButton btBrowse;
+    private javax.swing.JButton btLog;
+    private javax.swing.JButton btRemove;
+    private javax.swing.JButton btSave;
+    private javax.swing.JButton btTraining;
     private javax.swing.JButton btnBrowseInput;
     private javax.swing.JButton btnBrowseTest;
     private javax.swing.JButton btnClearTes;
     private javax.swing.JButton btnDataClear;
     private javax.swing.JButton btnDataHapus;
-    private javax.swing.JButton btnDataProses;
     private javax.swing.JButton btnDataSimpan;
-    private javax.swing.JButton btnDataTambah;
     private javax.swing.JButton btnRecognize;
     private javax.swing.JButton btnTesTraining;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JCheckBox cbDefaultParam;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblSlice1;
     private javax.swing.JLabel lblSlice10;
     private javax.swing.JLabel lblSlice11;
@@ -1322,8 +1702,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lblSlice7;
     private javax.swing.JLabel lblSlice8;
     private javax.swing.JLabel lblSlice9;
+    private javax.swing.JList listLearningSet;
     private javax.swing.JPanel pnlDatabase;
     private javax.swing.JPanel pnlGambarInput;
+    private javax.swing.JPanel pnlInput;
     private javax.swing.JPanel pnlRecognition;
     private javax.swing.JPanel pnlSlice1;
     private javax.swing.JPanel pnlSlice10;
@@ -1344,16 +1726,23 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel pnlSlice7;
     private javax.swing.JPanel pnlSlice8;
     private javax.swing.JPanel pnlSlice9;
+    private javax.swing.JPanel pnlTes;
     private javax.swing.JPanel pnlTesFuzzy;
     private javax.swing.JPanel pnlTesOri;
+    private javax.swing.JPanel pnlTesThinning;
     private javax.swing.JPanel pnlTesThreshold;
     private javax.swing.JTable tblData;
     private javax.swing.JTable tblHasil;
     private javax.swing.JTextArea txtBobotTes;
+    private javax.swing.JTextField txtBrowseImage;
     private javax.swing.JTextField txtBrowseTes;
-    private javax.swing.JTextArea txtDataBobot;
-    private javax.swing.JTextField txtDataGambar;
-    private javax.swing.JTextField txtDataNama;
     private javax.swing.JTextField txtGambarInput;
+    private javax.swing.JTextField txtJmlHiddenLayer;
+    private javax.swing.JTextField txtLR;
+    private javax.swing.JTextField txtMaxEpoch;
+    private javax.swing.JTextField txtMaxRandom;
+    private javax.swing.JTextField txtMinRandom;
+    private javax.swing.JTextField txtNama;
+    private javax.swing.JTextField txtTargetError;
     // End of variables declaration//GEN-END:variables
 }
