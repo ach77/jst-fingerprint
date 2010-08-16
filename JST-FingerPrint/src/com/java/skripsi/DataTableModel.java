@@ -29,7 +29,7 @@ public class DataTableModel extends AbstractTableModel {
             data[i][0] = fp.getId();
             data[i][1] = fp.getNama();
             data[i][2] = fp.getImage();
-            data[i][3] = fp.getPola();
+            data[i][3] = fp.getBobot();
         }
     }
 

@@ -10,18 +10,18 @@ package com.java.skripsi;
  */
 public class Converter {
 
-    public static String decimalToBinary(int decimal,int digit) {
+    public static String decimalToBinary(int decimal, int digit) {
         String result = "";
-        int  sisa;
+        int sisa;
         while (decimal != 0) {
             sisa = decimal % 2;
             decimal = decimal / 2;
-            result=sisa+result;
+            result = sisa + result;
         }
-        if(result.length()<digit){
-            int tmp=digit-result.length();
+        if (result.length() < digit) {
+            int tmp = digit - result.length();
             for (int i = 0; i < tmp; i++) {
-                result="0"+result;
+                result = "0" + result;
             }
         }
         return result;
@@ -39,4 +39,11 @@ public class Converter {
         return result;
     }
 
+    public static double[] stringToArrayDouble(String string) {
+        double[] array = new double[string.length()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = Double.parseDouble(String.valueOf(string.charAt(i)));
+        }
+        return array;
+    }
 }

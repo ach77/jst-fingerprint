@@ -8,7 +8,6 @@
  *
  * Created on 13 Agu 10, 8:24:41
  */
-
 package com.java.skripsi;
 
 /**
@@ -17,9 +16,12 @@ package com.java.skripsi;
  */
 public class LogForm extends javax.swing.JFrame {
 
+    String log;
+
     /** Creates new form LogForm */
     public LogForm() {
         initComponents();
+        log = "";
     }
 
     /** This method is called from within the constructor to
@@ -35,8 +37,10 @@ public class LogForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textLog = new javax.swing.JTextArea();
+        btClose = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Log");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabel1.setText("Log Training");
 
@@ -46,6 +50,13 @@ public class LogForm extends javax.swing.JFrame {
         textLog.setRows(5);
         jScrollPane1.setViewportView(textLog);
 
+        btClose.setText("Close");
+        btClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCloseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -53,42 +64,64 @@ public class LogForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                    .addComponent(btClose, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 308, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 302, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(btClose)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCloseActionPerformed
+        clearLog();
+        this.setVisible(false);
+    }//GEN-LAST:event_btCloseActionPerformed
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new LogForm().setVisible(true);
             }
         });
     }
 
+    public void clearLog() {
+        log = "";
+        this.textLog.setText("");
+    }
+
+    public void setLog(LogInterface aLog) {
+        if (log.length() == 0) {
+            log += aLog.getLog();
+        } else {
+            log += "\n\n" + aLog.getLog();
+        }
+        this.textLog.setText(log);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btClose;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea textLog;
     // End of variables declaration//GEN-END:variables
-
 }

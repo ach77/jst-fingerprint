@@ -5,6 +5,7 @@
 package com.java.skripsi;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -12,6 +13,7 @@ import java.util.ArrayList;
  */
 public class ImageProcessor {
 
+    public ArrayList<int[][]> list;
     private int[][] group0 = {{1, 1, 0, 0}, {0, 0, 1, 1}};
     private int[][] group45 = {{1, 1, 1, 0}, {0, 1, 1, 1}, {0, 0, 0, 1}, {1, 0, 0, 0}, {0, 1, 1, 0}};
     private int[][] group90 = {{0, 1, 0, 1}, {1, 0, 1, 0}};
@@ -74,7 +76,11 @@ public class ImageProcessor {
         }
         double result = 0;
         try {
-            result = ((jml0 * 0) + (jml45 * 45) + (jml90 * 90) + (jml45m * -45)) / (jml0 + jml45 + jml90 + jml45m);
+            if ((jml0 + jml45 + jml90 + jml45m) == 0) {
+                result = 0;
+            } else {
+                result = ((jml0 * 0) + (jml45 * 45) + (jml90 * 90) + (jml45m * -45)) / (jml0 + jml45 + jml90 + jml45m);
+            }
         } catch (ArithmeticException e) {
             result = 0;
         }
@@ -85,7 +91,7 @@ public class ImageProcessor {
 
         double[] result = new double[19];
         //pola 1 dan 2
-        ArrayList<int[][]> list = new ArrayList<int[][]>();
+        list = new ArrayList<int[][]>();
         list = slice(imgArray, 2, 1, list);
         list = slice(imgArray, 1, 2, list);
         list = slice(imgArray, 3, 1, list);
@@ -98,6 +104,10 @@ public class ImageProcessor {
             result[i] = calculate(tmp);
         }
         return result;
+    }
+
+    public ArrayList<int[][]> getListArrayImage() {
+        return list;
     }
 
     public static ArrayList<int[][]> slice(int[][] array, int row, int column, ArrayList<int[][]> listData) {

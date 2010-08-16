@@ -230,33 +230,25 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel17" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel16" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel18" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="btSave" alignment="1" pref="408" max="32767" attributes="0"/>
+                              <Component id="btTraining" alignment="0" pref="408" max="32767" attributes="0"/>
+                              <Component id="txtNama" alignment="0" pref="408" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="btLog" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btRemove" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btSave" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btAdd" min="-2" pref="67" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel17" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel16" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel18" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="btTraining" alignment="0" pref="408" max="32767" attributes="0"/>
-                                      <Component id="txtNama" alignment="0" pref="408" max="32767" attributes="0"/>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="btRemove" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="btAdd" min="-2" pref="67" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="txtBrowseImage" alignment="0" pref="408" max="32767" attributes="1"/>
-                                      <Component id="jScrollPane5" alignment="1" min="-2" pref="408" max="-2" attributes="1"/>
-                                  </Group>
-                              </Group>
+                              <Component id="txtBrowseImage" alignment="0" pref="408" max="32767" attributes="1"/>
+                              <Component id="jScrollPane5" alignment="1" pref="408" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btBrowse" min="-2" max="-2" attributes="0"/>
@@ -296,10 +288,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btTraining" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btLog" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btSave" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="btSave" min="-2" max="-2" attributes="0"/>
                           <EmptySpace pref="42" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -368,15 +357,13 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btTrainingActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btLog">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="LOG TRAINING"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JButton" name="btSave">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="SIMPAN KE DATABASE"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSaveActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel18">
                   <Properties>
@@ -406,9 +393,7 @@
                               <Component id="jScrollPane1" pref="652" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="220" max="-2" attributes="0"/>
-                              <Component id="btnDataSimpan" min="-2" pref="163" max="-2" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="389" max="-2" attributes="0"/>
                               <Component id="btnDataHapus" min="-2" pref="143" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnDataClear" pref="124" max="32767" attributes="0"/>
@@ -425,7 +410,6 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnDataHapus" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnDataClear" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnDataSimpan" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" pref="557" max="32767" attributes="0"/>
@@ -435,14 +419,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="btnDataSimpan">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="SIMPAN DATA"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDataSimpanActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JButton" name="btnDataHapus">
               <Properties>
                 <Property name="text" type="java.lang.String" value="HAPUS DATA"/>
@@ -733,8 +709,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="jTextField1" alignment="0" pref="273" max="32767" attributes="0"/>
-                                  <Component id="txtBrowseTes" alignment="0" pref="273" max="32767" attributes="0"/>
+                                  <Component id="txtTesTarget" alignment="0" pref="273" max="32767" attributes="0"/>
+                                  <Component id="txtTesBrowse" alignment="0" pref="273" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnBrowseTest" min="-2" max="-2" attributes="0"/>
@@ -754,20 +730,20 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtBrowseTes" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTesBrowse" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnClearTes" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnTesTraining" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBrowseTest" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTesTarget" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel3" min="-2" pref="200" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jPanel6" pref="340" max="32767" attributes="0"/>
+                      <Component id="jPanel6" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -779,7 +755,7 @@
                 <Property name="text" type="java.lang.String" value="Inputkan Gambar"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtBrowseTes">
+            <Component class="javax.swing.JTextField" name="txtTesBrowse">
             </Component>
             <Component class="javax.swing.JButton" name="btnBrowseTest">
               <Properties>
@@ -1101,36 +1077,30 @@
                                       <Component id="pnlSlice14" alignment="0" min="-2" max="-2" attributes="1"/>
                                   </Group>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="pnlSlice15" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="pnlSlice16" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="pnlSlice17" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="pnlSlice18" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="pnlSlice19" min="-2" max="-2" attributes="1"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="lblSlice15" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="lblSlice16" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="lblSlice17" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="lblSlice18" min="-2" max="-2" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="lblSlice19" min="-2" max="-2" attributes="1"/>
-                                      </Group>
-                                  </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="pnlSlice15" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane2" pref="219" max="32767" attributes="0"/>
+                                  <Component id="pnlSlice16" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="pnlSlice17" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="pnlSlice18" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="pnlSlice19" min="-2" max="-2" attributes="1"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="lblSlice15" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lblSlice16" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lblSlice17" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lblSlice18" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lblSlice19" min="-2" max="-2" attributes="1"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace pref="73" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1183,26 +1153,21 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="pnlSlice15" min="-2" max="-2" attributes="1"/>
-                                      <Component id="pnlSlice16" min="-2" max="-2" attributes="1"/>
-                                      <Component id="pnlSlice17" min="-2" max="-2" attributes="1"/>
-                                      <Component id="pnlSlice18" min="-2" max="-2" attributes="1"/>
-                                      <Component id="pnlSlice19" min="-2" max="-2" attributes="1"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lblSlice15" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblSlice16" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblSlice17" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblSlice18" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblSlice19" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
+                              <Component id="pnlSlice15" min="-2" max="-2" attributes="1"/>
+                              <Component id="pnlSlice16" min="-2" max="-2" attributes="1"/>
+                              <Component id="pnlSlice17" min="-2" max="-2" attributes="1"/>
+                              <Component id="pnlSlice18" min="-2" max="-2" attributes="1"/>
+                              <Component id="pnlSlice19" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblSlice15" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSlice16" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSlice17" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSlice18" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSlice19" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1900,21 +1865,6 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Container class="javax.swing.JScrollPane" name="jScrollPane2">
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JTextArea" name="txtBobotTes">
-                      <Properties>
-                        <Property name="columns" type="int" value="20"/>
-                        <Property name="rows" type="int" value="5"/>
-                      </Properties>
-                    </Component>
-                  </SubComponents>
-                </Container>
               </SubComponents>
             </Container>
             <Component class="javax.swing.JButton" name="btnClearTes">
@@ -1933,7 +1883,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTesTrainingActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField1">
+            <Component class="javax.swing.JTextField" name="txtTesTarget">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel19">
               <Properties>

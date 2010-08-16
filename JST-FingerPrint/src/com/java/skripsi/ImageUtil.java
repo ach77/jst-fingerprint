@@ -4,6 +4,8 @@
  */
 package com.java.skripsi;
 
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -12,6 +14,12 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -115,7 +123,32 @@ public class ImageUtil {
                 i = 0;
             }
             int data = ((int) pix) & 0xff;
-            result[j][i] = data;            
+            result[j][i] = data;
+            i++;
+        }
+        return result;
+    }
+
+    public static int[][] getPixel(BufferedImage bi) {
+        int result[][] = null;
+        byte[] pixels;
+        int w, h;
+        DataBufferByte dbb = (DataBufferByte) bi.getRaster().getDataBuffer();
+        pixels = dbb.getData(); // masukkan nilai pixel image ke dalam variabel pixels
+        // Ciptakan variabel array 2 dimensi untuk menampung nilai pixel suatu image
+        w = bi.getWidth();
+        h = bi.getHeight();
+        result = new int[h][w];
+
+        int i = 0, j = 0;
+        // Membuat array 2 dimensi untuk setiap image, sesuai dengan ukuran tinggi dan lebar image
+        for (byte pix : pixels) {
+            if (i % w == 0 && i != 0) {
+                j++;
+                i = 0;
+            }
+            int data = ((int) pix) & 0xff;
+            result[j][i] = data;
             i++;
         }
         return result;
@@ -135,18 +168,48 @@ public class ImageUtil {
         h = bi.getHeight();
         result = new int[h][w];
 
-        int i = 0, j = 0;        
+        int i = 0, j = 0;
         for (byte pix : pixels) {
             if (i % w == 0 && i != 0) {
                 j++;
                 i = 0;
             }
             int data = ((int) pix) & 0xff;
-            if (data <= 127) result[j][i] = 1;
-            else result[j][i] = 0;
-            System.out.println("j="+j+",i="+i+","+result[j][i]);
+            if (data <= 127) {
+                result[j][i] = 1;
+            } else {
+                result[j][i] = 0;
+            }
             i++;
         }
         return result;
+    }
+
+    public static BufferedImage arrayToBufferedImage(int[][] array) {
+        // Ciptakan Buffered Image.
+        BufferedImage im = new BufferedImage(array[0].length, array.length, BufferedImage.TYPE_BYTE_BINARY);
+        // raster digunakan untuk mengeset nilai pixel
+        WritableRaster raster = im.getRaster();
+        // Meletakkan nilai pixel yang telah diubah ke dalam raster
+        for (int y = 0; y < array.length; y++) {
+            for (int x = 0; x < array[y].length; x++) {
+                array[y][x] = array[y][x] == 1 ? 0 : 1;
+                raster.setSample(x, y, 0, array[y][x]);
+            }
+        }
+        return im;
+    }
+
+    public static  byte[] fileToByteArray(File file) {
+        ByteArrayOutputStream os = null;
+        try {
+            BufferedImage bi = ImageIO.read(file);
+            os = new ByteArrayOutputStream();
+            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
+            encoder.encode(bi);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return os.toByteArray();
     }
 }
