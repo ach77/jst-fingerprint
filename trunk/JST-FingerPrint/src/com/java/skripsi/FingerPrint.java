@@ -13,9 +13,15 @@ public class FingerPrint {
     private int id;
     private String nama;
     private byte[] image;
-    private String pola;
+    private String bobot;
 
     public FingerPrint() {
+    }
+
+    public FingerPrint(String nama, byte[] image, String bobot) {
+        this.nama = nama;
+        this.image = image;
+        this.bobot = bobot;
     }
 
     /**
@@ -63,14 +69,14 @@ public class FingerPrint {
     /**
      * @return the pola
      */
-    public String getPola() {
-        return pola;
+    public String getBobot() {
+        return bobot;
     }
 
     /**
      * @param pola the pola to set
      */
-    public void setPola(String pola) {
-        this.pola = pola;
+    public void setBobot(String pola) {
+        this.bobot = pola;
     }
 }
