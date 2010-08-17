@@ -14,7 +14,7 @@ import javax.swing.table.AbstractTableModel;
 public class DataTableModel extends AbstractTableModel {
 
     int row;
-    String[] column = {"ID", "Nama", "Gambar", "Pola"};
+    String[] column = {"ID", "Nama", "Gambar", "Bobot"};
     ArrayList<FingerPrint> list;
     Object[][] data;
     DB db;
