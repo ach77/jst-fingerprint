@@ -46,4 +46,14 @@ public class Converter {
         }
         return array;
     }
+
+    public static boolean cekBiner(String str){
+        boolean valid = true;
+        for (int i = 0; i < str.length(); i++) {
+            if(str.charAt(i)!='0' || str.charAt(i)!='1'){
+                return false;
+            }
+        }
+        return valid;
+    }
 }

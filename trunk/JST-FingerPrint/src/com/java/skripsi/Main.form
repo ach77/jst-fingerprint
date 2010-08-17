@@ -37,6 +37,9 @@
       <AccessibilityProperties>
         <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Image Databases"/>
       </AccessibilityProperties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTabbedPane1MouseClicked"/>
+      </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
@@ -52,11 +55,11 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel8" alignment="1" max="32767" attributes="0"/>
-                          <Component id="jPanel7" alignment="1" max="32767" attributes="0"/>
+                          <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jPanel8" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -64,12 +67,12 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel7" max="32767" attributes="0"/>
+                      <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="39" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -101,27 +104,24 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="cbDefaultParam" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace pref="129" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="txtMaxRandom" pref="264" max="32767" attributes="0"/>
-                                      <Component id="txtMinRandom" pref="264" max="32767" attributes="0"/>
-                                      <Component id="txtJmlHiddenLayer" pref="264" max="32767" attributes="1"/>
-                                      <Component id="txtLR" pref="264" max="32767" attributes="1"/>
-                                      <Component id="txtTargetError" pref="264" max="32767" attributes="1"/>
-                                      <Component id="txtMaxEpoch" alignment="0" pref="264" max="32767" attributes="1"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="236" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                  <Component id="txtMaxRandom" pref="264" max="32767" attributes="0"/>
+                                  <Component id="txtMinRandom" pref="264" max="32767" attributes="0"/>
+                                  <Component id="txtJmlHiddenLayer" pref="264" max="32767" attributes="1"/>
+                                  <Component id="txtLR" pref="264" max="32767" attributes="1"/>
+                                  <Component id="txtTargetError" pref="264" max="32767" attributes="1"/>
+                                  <Component id="txtMaxEpoch" alignment="0" pref="264" max="32767" attributes="1"/>
                               </Group>
                           </Group>
+                          <EmptySpace min="-2" pref="236" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="cbDefaultParam" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -153,7 +153,7 @@
                               <Component id="txtMaxRandom" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace pref="21" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -190,21 +190,35 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtMaxEpoch">
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMaxEpochFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtTargetError">
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtTargetErrorActionPerformed"/>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtTargetErrorFocusLost"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtLR">
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtLRFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtJmlHiddenLayer">
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtJmlHiddenLayerFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtMinRandom">
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMinRandomFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtMaxRandom">
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtMaxRandomActionPerformed"/>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMaxRandomFocusLost"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="cbDefaultParam">
@@ -289,7 +303,7 @@
                           <Component id="btTraining" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btSave" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="42" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -387,17 +401,10 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jScrollPane1" pref="652" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="389" max="-2" attributes="0"/>
-                              <Component id="btnDataHapus" min="-2" pref="143" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnDataClear" pref="124" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jScrollPane1" pref="652" max="32767" attributes="0"/>
+                          <Component id="btnDataHapus" alignment="1" min="-2" pref="143" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -407,10 +414,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnDataHapus" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnDataClear" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="btnDataHapus" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" pref="557" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -448,14 +452,6 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btnDataClear">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="CLEAR SELEKSI"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDataClearActionPerformed"/>
-              </Events>
-            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="pnlRecognition">
@@ -537,19 +533,19 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jScrollPane4" pref="594" max="32767" attributes="0"/>
+                              <Component id="scrollPaneHasil" pref="594" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane4" alignment="1" pref="111" max="32767" attributes="0"/>
+                          <Component id="scrollPaneHasil" alignment="1" pref="111" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+                    <Container class="javax.swing.JScrollPane" name="scrollPaneHasil">
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                       <SubComponents>
@@ -644,6 +640,9 @@
                           <Dimension value="[300, 300]"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ImagePanel()"/>
+                      </AuxValues>
 
                       <Layout>
                         <DimensionLayout dim="0">
@@ -1884,6 +1883,9 @@
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txtTesTarget">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtTesTargetFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel19">
               <Properties>
