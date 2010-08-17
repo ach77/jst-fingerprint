@@ -77,7 +77,7 @@ public class JSTEngine implements LogInterface {
     }
 
     public String formatString(double num) {
-        return  (String.valueOf(num)).substring(0, 7);
+        return (String.valueOf(num)).substring(0, 7);
     }
 
     void inisialisasiBobot() {
@@ -224,7 +224,11 @@ public class JSTEngine implements LogInterface {
         showBobot();
     }
 
-    public double[] recognizeJST(double[] input, double target) {
+    public double[] recognizeJST(double[] input) {
+        System.out.println("input:");
+        for (int i = 0; i < input.length; i++) {
+            System.out.println(input[i]+",");
+        }
         double[] zIn = new double[jmlHidden];
         double[] z = new double[jmlHidden];
         double[] yIn = new double[jmlOutput];
@@ -234,9 +238,12 @@ public class JSTEngine implements LogInterface {
             zIn[i] = 0;
             for (int j = 0; j < jmlInput; j++) {
                 zIn[i] += input[j] * v[j][i];
+                System.out.println(input[j]+"*"+v[j][i]+"="+zIn[i]);
             }
             zIn[i] = v0[i] + zIn[i];
+            System.out.println("zIn["+i+"]:"+zIn[i]);
             z[i] = sigmoid(zIn[i]);
+            System.out.println("z["+i+"]:"+z[i]);
         }
 
         for (int i = 0; i < jmlOutput; i++) {
@@ -246,6 +253,7 @@ public class JSTEngine implements LogInterface {
             }
             yIn[i] += w0[i];
             y[i] = sigmoid(yIn[i]);
+            System.out.println("y["+i+"]:"+y[i]);
         }
 
         return y;
@@ -318,5 +326,60 @@ public class JSTEngine implements LogInterface {
 
     public String getLog() {
         return log;
+    }
+
+    public void setBobotRecognize(String strBobot, String delimiter,int jmlInput,int jmlOutput) {
+        String[] arrBobot = strBobot.split(delimiter);
+        this.jmlInput = jmlInput;
+        this.jmlOutput = jmlOutput;
+        this.jmlHidden = (arrBobot.length - (jmlOutput)) / (jmlInput + jmlOutput+1);
+
+        int counter = 0;
+        v = new double[jmlInput][jmlHidden];
+        for (int i = 0; i < jmlInput; i++) {
+            for (int j = 0; j < jmlHidden; j++) {
+                v[i][j] = Double.parseDouble(arrBobot[counter]);
+                counter++;
+            }
+        }
+
+        v0 = new double[jmlHidden];
+        for (int i = 0; i < jmlHidden; i++) {
+            v0[i] = Double.parseDouble(arrBobot[counter]);
+            counter++;
+        }
+
+        w = new double[jmlHidden][jmlOutput];
+        for (int i = 0; i < jmlHidden; i++) {
+            for (int j = 0; j < jmlOutput; j++) {
+                w[i][j] = Double.parseDouble(arrBobot[counter]);
+                counter++;
+            }
+        }
+
+        w0 = new double[jmlOutput];
+        for (int i = 0; i < jmlOutput; i++) {
+            w0[i] = Double.parseDouble(arrBobot[counter]);
+            counter++;
+        }
+    }
+
+    public double[] round(double[] result){
+        double [] hasil = new double[result.length];
+        double threshold = 0.5;
+        for (int i = 0; i < result.length; i++) {
+            hasil[i] = result[i]<threshold?0:1;
+        }
+        return hasil;
+    }
+
+    public boolean match(double []target,double []result){
+        boolean valid = true;
+        for (int i = 0; i < result.length; i++) {
+            if(target[i]!=result[i]){
+                return false;
+            }
+        }
+        return valid;
     }
 }

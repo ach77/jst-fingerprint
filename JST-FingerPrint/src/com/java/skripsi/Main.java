@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -31,7 +32,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main extends javax.swing.JFrame {
 
     /** Creates new form Main */
-    public static final String DELIMITER = "|";
+    public static final String DELIMITER = ":";
     private DB db;
     private JSTEngine jstEngine;
     private ImageProcessor imageProcessor;
@@ -57,9 +58,11 @@ public class Main extends javax.swing.JFrame {
         //konfigurasi panel input
         setParameter(param);
         listFileTmp = new ArrayList<File>();
+        this.btSave.setEnabled(false);
 
         //konfigurasi panel tes
         txtTesTarget.setColumns(6);
+        this.btnClearTes.setEnabled(false);
     }
 
     public void setParameter(Parameter param) {
@@ -113,17 +116,16 @@ public class Main extends javax.swing.JFrame {
         btnDataHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblData = new javax.swing.JTable();
-        btnDataClear = new javax.swing.JButton();
         pnlRecognition = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        scrollPaneHasil = new javax.swing.JScrollPane();
         tblHasil = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         txtGambarInput = new javax.swing.JTextField();
         btnBrowseInput = new javax.swing.JButton();
-        pnlGambarInput = new javax.swing.JPanel();
+        pnlGambarInput = new ImagePanel();
         btnRecognize = new javax.swing.JButton();
         pnlTes = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
@@ -185,6 +187,12 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JST-Fuzzy FingerPrint");
 
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
+
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Konfigurasi Paramter"));
 
         jLabel4.setText("Maksimum Epoch");
@@ -199,15 +207,49 @@ public class Main extends javax.swing.JFrame {
 
         jLabel15.setText("Maksimum Random");
 
+        txtMaxEpoch.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMaxEpochFocusLost(evt);
+            }
+        });
+
         txtTargetError.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTargetErrorActionPerformed(evt);
+            }
+        });
+        txtTargetError.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTargetErrorFocusLost(evt);
+            }
+        });
+
+        txtLR.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtLRFocusLost(evt);
+            }
+        });
+
+        txtJmlHiddenLayer.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtJmlHiddenLayerFocusLost(evt);
+            }
+        });
+
+        txtMinRandom.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMinRandomFocusLost(evt);
             }
         });
 
         txtMaxRandom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtMaxRandomActionPerformed(evt);
+            }
+        });
+        txtMaxRandom.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMaxRandomFocusLost(evt);
             }
         });
 
@@ -240,21 +282,19 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(cbDefaultParam)
-                        .addContainerGap())
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtMaxRandom, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                            .addComponent(txtMinRandom, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                            .addComponent(txtJmlHiddenLayer, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                            .addComponent(txtLR, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                            .addComponent(txtTargetError, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                            .addComponent(txtMaxEpoch, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE))
-                        .addGap(236, 236, 236))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtMaxRandom, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                        .addComponent(txtMinRandom, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                        .addComponent(txtJmlHiddenLayer, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                        .addComponent(txtLR, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                        .addComponent(txtTargetError, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                        .addComponent(txtMaxEpoch, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)))
+                .addGap(236, 236, 236))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
                 .addComponent(cbDefaultParam)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -280,7 +320,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMaxRandom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
-                .addContainerGap())
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Input Image"));
@@ -380,7 +420,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(btTraining)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btSave)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnlInputLayout = new javax.swing.GroupLayout(pnlInput);
@@ -390,18 +430,18 @@ public class Main extends javax.swing.JFrame {
             .addGroup(pnlInputLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnlInputLayout.setVerticalGroup(
             pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInputLayout.createSequentialGroup()
+            .addGroup(pnlInputLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Input & Parameter", pnlInput);
@@ -443,36 +483,22 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblData);
 
-        btnDataClear.setText("CLEAR SELEKSI");
-        btnDataClear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDataClearActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlDatabaseLayout = new javax.swing.GroupLayout(pnlDatabase);
         pnlDatabase.setLayout(pnlDatabaseLayout);
         pnlDatabaseLayout.setHorizontalGroup(
             pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDatabaseLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
-                        .addGap(389, 389, 389)
-                        .addComponent(btnDataHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDataClear, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+                    .addComponent(btnDataHapus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         pnlDatabaseLayout.setVerticalGroup(
             pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDatabaseLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDataHapus)
-                    .addComponent(btnDataClear))
+                .addComponent(btnDataHapus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
                 .addContainerGap())
@@ -507,7 +533,7 @@ public class Main extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane4.setViewportView(tblHasil);
+        scrollPaneHasil.setViewportView(tblHasil);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -515,12 +541,12 @@ public class Main extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
+                .addComponent(scrollPaneHasil, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+            .addComponent(scrollPaneHasil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
@@ -1270,6 +1296,12 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        txtTesTarget.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTesTargetFocusLost(evt);
+            }
+        });
+
         jLabel19.setText("Target (6 digit biner)");
 
         javax.swing.GroupLayout pnlTesLayout = new javax.swing.GroupLayout(pnlTes);
@@ -1340,7 +1372,18 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBrowseInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseInputActionPerformed
-        // TODO add your handling code here:
+        JFileChooser jfc = new JFileChooser(new File("images"));
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.showOpenDialog(this);
+
+        try {
+            if (jfc.getSelectedFile() != null) {
+                txtGambarInput.setText(jfc.getSelectedFile().getAbsolutePath());
+                Image image = Toolkit.getDefaultToolkit().getImage(jfc.getSelectedFile().toURI().toURL());
+                ((ImagePanel) pnlGambarInput).setImage(image);
+            }
+        } catch (Exception e) {
+        }
     }//GEN-LAST:event_btnBrowseInputActionPerformed
 
     private void refreshTableData() {
@@ -1349,17 +1392,59 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void btnDataHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataHapusActionPerformed
+        if (tblData.getSelectedRow() != -1) {
+            FingerPrint fp = dtm.list.get(tblData.getSelectedRow());
+            db.deleteData(fp.getId());
+            refreshTableData();
+        } else {
+            showAlert("Seleksi data terlebih dahulu", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnDataHapusActionPerformed
 
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
     }//GEN-LAST:event_tblDataMouseClicked
 
-    private void btnDataClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataClearActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDataClearActionPerformed
-
     private void btnRecognizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecognizeActionPerformed
-        // TODO add your handling code here:
+        Image image = ((ImagePanel) pnlGambarInput).getImage();
+        BufferedImage bi = ImageUtil.ImageToBufferedImage(image, this);
+        //fuzzy enhancement
+        FuzzyEnhancementInt f = new FuzzyEnhancementInt(bi);
+        f.processEnhancement();
+        bi = f.getEnhancementImage();
+
+//        //threshold
+//        Thresholder.threshold(bis);
+//        ((ImagePanel) pnlTesThreshold).setImage(bi);
+//
+//        //thinning
+//        Thinner.thin(bis);
+//         ((ImagePanel) pnlTesThinning).setImage(bi);
+
+        //jadikan gambar menjadi grayscale
+        int[][] data = ImageUtil.ImageToBiner(bi);
+
+        //slice menjadi 19 bagian
+        double[] input = imageProcessor.divideImageArray(data);
+
+        //menghitung satu per satu kecocokan sidik jari dengan data di database
+        ArrayList<FingerPrint> list = db.getData();
+        for (int i = 0; i < list.size(); i++) {
+            fp = list.get(i);
+            double[] target = Converter.stringToArrayDouble(Converter.decimalToBinary(fp.getId(), 6));
+
+            jstEngine.setBobotRecognize(fp.getBobot(), DELIMITER, 19, 6);
+            double[] hasil = jstEngine.recognizeJST(input);
+            for (int j = 0; j < hasil.length; j++) {
+                double d = hasil[j];
+                System.out.print(d+",");
+            }
+            hasil = jstEngine.round(hasil);
+            if (jstEngine.match(target, hasil)) {
+                showAlert("Sidik jari teridentifikasi", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                showAlert("Sidik jari tidak teridentifikasi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnRecognizeActionPerformed
 
     private void btnBrowseTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseTestActionPerformed
@@ -1369,7 +1454,7 @@ public class Main extends javax.swing.JFrame {
 
         try {
             if (jfc.getSelectedFile() != null) {
-                txtTesBrowse.setText(jfc.getSelectedFile().getName());
+                txtTesBrowse.setText(jfc.getSelectedFile().getAbsolutePath());
                 Image image = Toolkit.getDefaultToolkit().getImage(jfc.getSelectedFile().toURI().toURL());
                 ((ImagePanel) pnlTesOri).setImage(image);
             }
@@ -1378,6 +1463,10 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBrowseTestActionPerformed
 
     private void btnTesTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesTrainingActionPerformed
+        if (((ImagePanel) pnlTesOri).getImage() != null && this.txtTesTarget.getText().length() != 6) {
+            showAlert("Input tidak valid", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         //siapkan form untuk log
         frmLog.clearLog();
         //ambil image dan ubah ke BufferedImage dari file yg diseleksi
@@ -1451,6 +1540,7 @@ public class Main extends javax.swing.JFrame {
         jstEngine.trainingJST();
         frmLog.setLog(jstEngine);
         frmLog.setVisible(true);
+        this.btnClearTes.setEnabled(true);
     }//GEN-LAST:event_btnTesTrainingActionPerformed
 
     private void btnClearTesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearTesActionPerformed
@@ -1479,6 +1569,7 @@ public class Main extends javax.swing.JFrame {
         ((ImagePanel) pnlSlice17).setImage(null);
         ((ImagePanel) pnlSlice18).setImage(null);
         ((ImagePanel) pnlSlice19).setImage(null);
+        this.btnClearTes.setEnabled(false);
     }//GEN-LAST:event_btnClearTesActionPerformed
 
     private void txtTargetErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTargetErrorActionPerformed
@@ -1530,14 +1621,16 @@ public class Main extends javax.swing.JFrame {
      * @param evt
      */
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
-        listFileTmp.add(fileTmp);
-        String[] filenames = new String[listFileTmp.size()];
-        for (int i = 0; i < listFileTmp.size(); i++) {
-            filenames[i] = ((File) listFileTmp.get(i)).getAbsolutePath();
+        if (fileTmp != null && !this.txtBrowseImage.getText().isEmpty()) {
+            listFileTmp.add(fileTmp);
+            String[] filenames = new String[listFileTmp.size()];
+            for (int i = 0; i < listFileTmp.size(); i++) {
+                filenames[i] = ((File) listFileTmp.get(i)).getAbsolutePath();
+            }
+            this.listLearningSet.setListData(filenames);
+            this.txtBrowseImage.setText("");
+            fileTmp = null;
         }
-        this.listLearningSet.setListData(filenames);
-        this.txtBrowseImage.setText("");
-        fileTmp = null;
     }//GEN-LAST:event_btAddActionPerformed
 
     /**
@@ -1545,12 +1638,14 @@ public class Main extends javax.swing.JFrame {
      * @param evt
      */
     private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
-        listFileTmp.remove(listFileTmp.size() - 1);
-        String[] filenames = new String[listFileTmp.size()];
-        for (int i = 0; i < listFileTmp.size(); i++) {
-            filenames[i] = ((File) listFileTmp.get(i)).getAbsolutePath();
+        if (listFileTmp.size() > 1) {
+            listFileTmp.remove(listFileTmp.size() - 1);
+            String[] filenames = new String[listFileTmp.size()];
+            for (int i = 0; i < listFileTmp.size(); i++) {
+                filenames[i] = ((File) listFileTmp.get(i)).getAbsolutePath();
+            }
+            this.listLearningSet.setListData(filenames);
         }
-        this.listLearningSet.setListData(filenames);
     }//GEN-LAST:event_btRemoveActionPerformed
 
     /**
@@ -1558,6 +1653,10 @@ public class Main extends javax.swing.JFrame {
      * @param evt
      */
     private void btTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTrainingActionPerformed
+        if (this.txtNama.getText().isEmpty() || listFileTmp.size() <= 0) {
+            showAlert("Your input is not valid", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         //siapkan form log
         frmLog.clearLog();
         //tentukan jumlah learning set
@@ -1637,14 +1736,104 @@ public class Main extends javax.swing.JFrame {
             jstEngine.trainingJST();
             frmLog.setLog(jstEngine);
             frmLog.setVisible(true);
+            this.btSave.setEnabled(true);
         }
     }//GEN-LAST:event_btTrainingActionPerformed
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
-        File imageFile = (File)listFileTmp.get(0);
+        File imageFile = (File) listFileTmp.get(0);
         fp = new FingerPrint(this.txtNama.getText().trim(), ImageUtil.fileToByteArray(imageFile), jstEngine.getBobot(DELIMITER));
         db.insertData(fp);
+        this.txtNama.setText("");
+        this.listLearningSet.setModel(null);
+        this.btSave.setEnabled(false);
     }//GEN-LAST:event_btSaveActionPerformed
+
+    private void txtMaxEpochFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxEpochFocusLost
+        if (this.txtMaxEpoch.getText().isEmpty()) {
+            showAlert("Maksimum Epoch harus diisi", JOptionPane.WARNING_MESSAGE);
+            this.txtMaxEpoch.setText(String.valueOf(param.getMaxEpoch()));
+        } else if (Integer.parseInt(this.txtMaxEpoch.getText()) < 10) {
+            showAlert("Maksimum Epoch harus lebih dari 10", JOptionPane.WARNING_MESSAGE);
+            this.txtMaxEpoch.setText(String.valueOf(param.getMaxEpoch()));
+        }
+    }//GEN-LAST:event_txtMaxEpochFocusLost
+
+    private void txtTargetErrorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTargetErrorFocusLost
+        if (this.txtTargetError.getText().isEmpty()) {
+            showAlert("Target Error harus diisi", JOptionPane.WARNING_MESSAGE);
+            this.txtTargetError.setText(String.valueOf(param.getTarget()));
+        } else if (Double.parseDouble(this.txtTargetError.getText()) > 0.1) {
+            showAlert("Target Error harus kurang dari 0.1", JOptionPane.WARNING_MESSAGE);
+            this.txtTargetError.setText(String.valueOf(param.getTarget()));
+        }
+    }//GEN-LAST:event_txtTargetErrorFocusLost
+
+    private void txtLRFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLRFocusLost
+        if (this.txtLR.getText().isEmpty()) {
+            showAlert("Learning Rate harus diisi", JOptionPane.WARNING_MESSAGE);
+            this.txtLR.setText(String.valueOf(param.getLearningRate()));
+        } else if (Double.parseDouble(this.txtLR.getText()) < 0.1 || Double.parseDouble(this.txtLR.getText()) > 1) {
+            showAlert("Learning Rate harus bernilai antara 0.1 hingga 1", JOptionPane.WARNING_MESSAGE);
+            this.txtLR.setText(String.valueOf(param.getLearningRate()));
+        }
+    }//GEN-LAST:event_txtLRFocusLost
+
+    private void txtJmlHiddenLayerFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtJmlHiddenLayerFocusLost
+        if (this.txtJmlHiddenLayer.getText().isEmpty()) {
+            showAlert("Hidden Layer harus diisi", JOptionPane.WARNING_MESSAGE);
+            this.txtJmlHiddenLayer.setText(String.valueOf(param.getNumHiddenLayer()));
+        } else if (Integer.parseInt(this.txtJmlHiddenLayer.getText()) < 6) {
+            showAlert("Hidden Layer harus bernilai lebih dari 6", JOptionPane.WARNING_MESSAGE);
+            this.txtJmlHiddenLayer.setText(String.valueOf(param.getNumHiddenLayer()));
+        }
+    }//GEN-LAST:event_txtJmlHiddenLayerFocusLost
+
+    private void txtMinRandomFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMinRandomFocusLost
+        if (this.txtMinRandom.getText().isEmpty()) {
+            showAlert("Minimum Random harus diisi", JOptionPane.WARNING_MESSAGE);
+            this.txtMinRandom.setText(String.valueOf(param.getMinRandom()));
+        } else if (Double.parseDouble(this.txtMinRandom.getText()) < 0.1 || Double.parseDouble(this.txtMinRandom.getText()) > 1) {
+            showAlert("Minimum Random harus bernilai antara 0.1 - 1", JOptionPane.WARNING_MESSAGE);
+            this.txtMinRandom.setText(String.valueOf(param.getMinRandom()));
+        } else if (Double.parseDouble(this.txtMaxRandom.getText()) < Double.parseDouble(this.txtMinRandom.getText())) {
+            showAlert("Minimum Random harus lebih kecil daripada Maksimum Random", JOptionPane.WARNING_MESSAGE);
+            this.txtMinRandom.setText(String.valueOf(param.getMinRandom()));
+            this.txtMaxRandom.setText(String.valueOf(param.getMaxRandom()));
+        }
+    }//GEN-LAST:event_txtMinRandomFocusLost
+
+    private void txtMaxRandomFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxRandomFocusLost
+        if (this.txtMaxRandom.getText().isEmpty()) {
+            showAlert("Maksimum Random harus diisi", JOptionPane.WARNING_MESSAGE);
+            this.txtMaxRandom.setText(String.valueOf(param.getMaxRandom()));
+        } else if (Double.parseDouble(this.txtMaxRandom.getText()) < 0.1 || Double.parseDouble(this.txtMaxRandom.getText()) > 1) {
+            showAlert("Maksimum Random harus bernilai antara 0.1 - 1", JOptionPane.WARNING_MESSAGE);
+            this.txtMaxRandom.setText(String.valueOf(param.getMaxRandom()));
+        } else if (Double.parseDouble(this.txtMaxRandom.getText()) < Double.parseDouble(this.txtMinRandom.getText())) {
+            showAlert("Maksimum Random harus lebih besar daripada Minimum Random", JOptionPane.WARNING_MESSAGE);
+            this.txtMinRandom.setText(String.valueOf(param.getMinRandom()));
+            this.txtMaxRandom.setText(String.valueOf(param.getMaxRandom()));
+        }
+    }//GEN-LAST:event_txtMaxRandomFocusLost
+
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        refreshTableData();
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    private void txtTesTargetFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTesTargetFocusLost
+        String targetDefault = "000001";
+        if (this.txtTesTarget.getText().length() != 6) {
+            showAlert("Inputan harus 6 digit", WIDTH);
+            this.txtTesTarget.setText(targetDefault);
+        } else if (Converter.cekBiner(txtTesTarget.getText())) {
+            showAlert("Inputan harus bilangan biner", WIDTH);
+            this.txtTesTarget.setText(targetDefault);
+        }
+    }//GEN-LAST:event_txtTesTargetFocusLost
+    public void showAlert(String message, int type) {
+        JOptionPane.showMessageDialog(this, message, "Info", JOptionPane.WARNING_MESSAGE);
+    }
 
     /**
      * @param args the command line arguments
@@ -1677,7 +1866,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnBrowseInput;
     private javax.swing.JButton btnBrowseTest;
     private javax.swing.JButton btnClearTes;
-    private javax.swing.JButton btnDataClear;
     private javax.swing.JButton btnDataHapus;
     private javax.swing.JButton btnRecognize;
     private javax.swing.JButton btnTesTraining;
@@ -1706,7 +1894,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblSlice1;
@@ -1757,6 +1944,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel pnlTesOri;
     private javax.swing.JPanel pnlTesThinning;
     private javax.swing.JPanel pnlTesThreshold;
+    private javax.swing.JScrollPane scrollPaneHasil;
     private javax.swing.JTable tblData;
     private javax.swing.JTable tblHasil;
     private javax.swing.JTextField txtBrowseImage;
