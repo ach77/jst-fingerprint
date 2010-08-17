@@ -11,4 +11,6 @@ package com.java.skripsi;
  */
 public interface LogInterface {
     public String getLog();
+
+    public double[] getChartData();
 }

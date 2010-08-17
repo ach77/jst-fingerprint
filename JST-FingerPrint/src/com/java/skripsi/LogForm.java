@@ -17,11 +17,13 @@ package com.java.skripsi;
 public class LogForm extends javax.swing.JFrame {
 
     String log;
+    MseChart chart;
 
     /** Creates new form LogForm */
     public LogForm() {
         initComponents();
         log = "";
+        chart = new MseChart();
     }
 
     /** This method is called from within the constructor to
@@ -38,6 +40,8 @@ public class LogForm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         textLog = new javax.swing.JTextArea();
         btClose = new javax.swing.JButton();
+        pnlChart = new org.jfree.chart.ChartPanel(null);
+        ;
 
         setTitle("Log");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -57,6 +61,17 @@ public class LogForm extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout pnlChartLayout = new javax.swing.GroupLayout(pnlChart);
+        pnlChart.setLayout(pnlChartLayout);
+        pnlChartLayout.setHorizontalGroup(
+            pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 747, Short.MAX_VALUE)
+        );
+        pnlChartLayout.setVerticalGroup(
+            pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 280, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -67,7 +82,8 @@ public class LogForm extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
                     .addComponent(jLabel1)
-                    .addComponent(btClose, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(btClose, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -75,7 +91,9 @@ public class LogForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 302, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -116,12 +134,14 @@ public class LogForm extends javax.swing.JFrame {
             log += "\n\n" + aLog.getLog();
         }
         this.textLog.setText(log);
+        this.pnlChart=chart.getChartPanel(aLog.getChartData());
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClose;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel pnlChart;
     private javax.swing.JTextArea textLog;
     // End of variables declaration//GEN-END:variables
 }

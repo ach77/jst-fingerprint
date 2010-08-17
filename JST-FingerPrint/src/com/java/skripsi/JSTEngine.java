@@ -21,6 +21,7 @@ public class JSTEngine implements LogInterface {
     public double batasMax, batasMin;                        // batas maksimum/minimum nilai random
     private Random r = new Random();
     private NumberFormat numberFormat;
+    double []arrMse;
 
     public JSTEngine() {
         numberFormat = NumberFormat.getInstance();
@@ -45,6 +46,7 @@ public class JSTEngine implements LogInterface {
         this.jmlOutput = jmlOutput;
         this.batasMax = batasMax;
         this.batasMin = batasMin;
+        this.arrMse = new double[epoch];
         inisialisasiBobot();
         log = "";
         showInput();
@@ -217,6 +219,7 @@ public class JSTEngine implements LogInterface {
                 }
             }
             counter++;
+            arrMse[counter]=mse;
             log += "MSE ke-" + counter + ":" + mse + "\n";
         } while (mse > targetError && counter < epoch);
         log += "-Selesai pada epoch ke-" + counter + " dengan MSE:" + mse + "\n"
@@ -390,5 +393,9 @@ public class JSTEngine implements LogInterface {
             }
         }
         return valid;
+    }
+
+    public double[] getChartData(){
+        return arrMse;
     }
 }
