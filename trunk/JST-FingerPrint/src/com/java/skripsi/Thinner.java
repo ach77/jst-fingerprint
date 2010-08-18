@@ -5,6 +5,7 @@
 package com.java.skripsi;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 
 /**
  *
@@ -12,11 +13,23 @@ import java.awt.image.BufferedImage;
  */
 public class Thinner {
 
-    private static final int CONSTANT_BLACK = 0xff000000;
-    private static final int CONSTANT_WHITE = 0xffffffff;
+    private BufferedImage dst;
+    private final int CONSTANT_BLACK = 0xff000000;
+    private final int CONSTANT_WHITE = 0xffffffff;
 
-    public static void thin(BufferedImage image) {
+    public Thinner(BufferedImage image) {
+        thin(image);
+    }
+
+    public BufferedImage getResult() {
+        return this.dst;
+    }
+
+    public void thin(BufferedImage image) {
         //Zhang-Suen Thinning
+        BufferedImage im = new BufferedImage(image.getWidth(),
+                image.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+        WritableRaster raster = im.getRaster();
 
         int h = image.getHeight();
         int w = image.getWidth();
@@ -105,15 +118,19 @@ public class Thinner {
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 if (imgval[x][y] == 1) {
-                    image.setRGB(x, y, CONSTANT_BLACK);
+                    // image.setRGB(x, y, CONSTANT_BLACK);
+                    raster.setSample(x, y, 0, CONSTANT_BLACK);
                 } else {
-                    image.setRGB(x, y, CONSTANT_WHITE);
+                    // image.setRGB(x, y, CONSTANT_WHITE);
+                    raster.setSample(x, y, 0, CONSTANT_WHITE);
                 }
             }
         }
+
+        this.dst = im;
     }
 
-    private static int[] getNeighbors(int imgval[][], int x, int y, int w, int h) {
+    private int[] getNeighbors(int imgval[][], int x, int y, int w, int h) {
         int a[] = new int[10];
         for (int n = 1; n < 10; n++) {
             a[n] = 0;
