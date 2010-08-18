@@ -33,15 +33,23 @@ public class DataTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
     public int getRowCount() {
         return list.size();
     }
 
+    @Override
     public int getColumnCount() {
         return column.length;
     }
 
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         return data[rowIndex][columnIndex];
+    }
+
+    @Override
+    public String getColumnName(int idx) {
+        return column[idx];
     }
 }

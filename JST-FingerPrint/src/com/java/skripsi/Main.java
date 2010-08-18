@@ -24,6 +24,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -49,11 +50,6 @@ public class Main extends javax.swing.JFrame {
         db = new DB();
         //tabel model
         listInput = new ArrayList<FingerPrint>();
-        FingerPrint fp = new FingerPrint();
-        fp.setId(1);
-        fp.setBobot("1111");
-        fp.setNama("omegea");
-        listInput.add(fp);
         dtm = new DataTableModel(db);
         itm = new InputTableModel(listInput);
 
@@ -67,6 +63,9 @@ public class Main extends javax.swing.JFrame {
         imageProcessor = new ImageProcessor();
         frmLog = new LogForm();
         frmLog.clearLog();
+
+        //konfigurasi panel database
+        this.txtBobotAkhir.setText(db.getBobot());
 
         //konfigurasi panel input
         setParameter(param);
@@ -131,6 +130,8 @@ public class Main extends javax.swing.JFrame {
         btnDataHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblData = new javax.swing.JTable();
+        txtBobotAkhir = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         pnlRecognition = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -392,6 +393,11 @@ public class Main extends javax.swing.JFrame {
         jScrollPane3.setViewportView(tblInput);
 
         btBatal.setText("BATAL");
+        btBatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBatalActionPerformed(evt);
+            }
+        });
 
         lblProses.setText(" ");
 
@@ -524,6 +530,8 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblData);
 
+        jLabel1.setText("Bobot Akhir");
+
         javax.swing.GroupLayout pnlDatabaseLayout = new javax.swing.GroupLayout(pnlDatabase);
         pnlDatabase.setLayout(pnlDatabaseLayout);
         pnlDatabaseLayout.setHorizontalGroup(
@@ -532,20 +540,28 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
-                    .addComponent(btnDataHapus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDataHapus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlDatabaseLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                        .addComponent(txtBobotAkhir, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnlDatabaseLayout.setVerticalGroup(
             pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
+            .addGroup(pnlDatabaseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnDataHapus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBobotAkhir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(20, 20, 20))
         );
 
-        jTabbedPane1.addTab("Image Database", pnlDatabase);
+        jTabbedPane1.addTab("Database", pnlDatabase);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -913,32 +929,32 @@ public class Main extends javax.swing.JFrame {
         );
 
         lblSlice1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice1.setText("-");
+        lblSlice1.setText("1");
         lblSlice1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice1.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice2.setText("-");
+        lblSlice2.setText("2");
         lblSlice2.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice3.setText("-");
+        lblSlice3.setText("3");
         lblSlice3.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice4.setText("-");
+        lblSlice4.setText("4");
         lblSlice4.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice5.setText("-");
+        lblSlice5.setText("5");
         lblSlice5.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice6.setText("-");
+        lblSlice6.setText("6");
         lblSlice6.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice7.setText("-");
+        lblSlice7.setText("7");
         lblSlice7.setPreferredSize(new java.awt.Dimension(75, 14));
 
         pnlSlice8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -1038,37 +1054,37 @@ public class Main extends javax.swing.JFrame {
         );
 
         lblSlice8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice8.setText("-");
+        lblSlice8.setText("8");
         lblSlice8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice8.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice9.setText("-");
+        lblSlice9.setText("9");
         lblSlice9.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice9.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice10.setText("-");
+        lblSlice10.setText("10");
         lblSlice10.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice10.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice11.setText("-");
+        lblSlice11.setText("11");
         lblSlice11.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice11.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice13.setText("-");
+        lblSlice13.setText("13");
         lblSlice13.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice13.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice12.setText("-");
+        lblSlice12.setText("12");
         lblSlice12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice12.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice14.setText("-");
+        lblSlice14.setText("14");
         lblSlice14.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice14.setPreferredSize(new java.awt.Dimension(75, 14));
 
@@ -1138,27 +1154,27 @@ public class Main extends javax.swing.JFrame {
         );
 
         lblSlice15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice15.setText("-");
+        lblSlice15.setText("15");
         lblSlice15.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice15.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice16.setText("-");
+        lblSlice16.setText("16");
         lblSlice16.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice16.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice17.setText("-");
+        lblSlice17.setText("17");
         lblSlice17.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice17.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice18.setText("-");
+        lblSlice18.setText("18");
         lblSlice18.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice18.setPreferredSize(new java.awt.Dimension(75, 14));
 
         lblSlice19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSlice19.setText("-");
+        lblSlice19.setText("19");
         lblSlice19.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblSlice19.setPreferredSize(new java.awt.Dimension(75, 14));
 
@@ -1439,6 +1455,8 @@ public class Main extends javax.swing.JFrame {
             showAlert("Inputan tidak valid", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        boolean isMatch = false;
+        FingerPrint fp=null;
         this.txtHasilRecognition.setText("");
         Image image = ((ImagePanel) pnlGambarInput).getImage();
         BufferedImage bi = ImageUtil.ImageToBufferedImage(image, this);
@@ -1461,26 +1479,29 @@ public class Main extends javax.swing.JFrame {
 
         //menghitung satu per satu kecocokan sidik jari dengan data di database
         ArrayList<FingerPrint> list = db.getData();
-        FingerPrint fp;
         for (int i = 0; i < list.size(); i++) {
             fp = list.get(i);
             double[] target = Converter.stringToArrayDouble(Converter.decimalToBinary(fp.getId(), 6));
 
-            jstEngine.setBobotRecognize(fp.getBobot(), DELIMITER, 19, 6);
+            jstEngine.setBobotRecognize(db.getBobot(), DELIMITER, 19, 6);
             double[] hasil = jstEngine.recognizeJST(input);
             //tulis report proses
             txtHasilRecognition.setText(txtHasilRecognition.getText() + jstEngine.getLog());
             // bulatkan nilai ke atas/ke bawah
             hasil = jstEngine.round(hasil);
             if (jstEngine.match(target, hasil)) {
-                txtHasilRecognition.setText(txtHasilRecognition.getText()
-                        + "\nSidik jari teridentifikasi sebagai:"
-                        + "\n-ID:" + fp.getId() + "\n-Nama:" + fp.getNama());
-                showAlert("Sidik jari teridentifikasi", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                txtHasilRecognition.setText(txtHasilRecognition.getText() + "\nSidik jari tidak teridentifikasi");
-                showAlert("Sidik jari tidak teridentifikasi", JOptionPane.ERROR_MESSAGE);
+                isMatch = true;
+                break;
             }
+        }
+        if (isMatch) {
+            txtHasilRecognition.setText(txtHasilRecognition.getText()
+                    + "\nSidik jari teridentifikasi sebagai:"
+                    + "\n-ID:" + fp.getId() + "\n-Nama:" + fp.getNama());
+            showAlert("Sidik jari teridentifikasi", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            txtHasilRecognition.setText(txtHasilRecognition.getText() + "\nSidik jari tidak teridentifikasi");
+            showAlert("Sidik jari tidak teridentifikasi", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRecognizeActionPerformed
 
@@ -1695,7 +1716,7 @@ public class Main extends javax.swing.JFrame {
                 strInput += j != tmpX.length - 1 ? tmpX[j] + DELIMITER : tmpX[j];
             }
 
-            int newId = counterId == 0 ? db.getNewId() : db.getNewId() + counterId;
+            int newId = counterId == 0 ? db.getNewId() : (db.getNewId() + counterId);
             FingerPrint fp = new FingerPrint();
             fp.setId(newId);
             fp.setNama(this.txtNama.getText().trim());
@@ -1708,7 +1729,6 @@ public class Main extends javax.swing.JFrame {
             this.txtBrowseImage.setText("");
             this.txtNama.setText("");
             fileTmp = null;
-            System.out.println("listInput length:" + listInput.size());
         }
     }//GEN-LAST:event_btAddActionPerformed
 
@@ -1720,6 +1740,7 @@ public class Main extends javax.swing.JFrame {
         if (listInput.size() != 0) {
             listInput.remove(tblInput.getSelectedRow());
             refreshTableInput();
+            counterId--;
         }
     }//GEN-LAST:event_btRemoveActionPerformed
 
@@ -1735,16 +1756,17 @@ public class Main extends javax.swing.JFrame {
         //siapkan form log
         frmLog.clearLog();
         //tentukan jumlah learning set
-        int jmlLearningSet = itm.list.size();
+        int jmlLearningSet = listInput.size();
 
         //proses persiapan input dan target
         double[][] target = new double[jmlLearningSet][6];
         double[][] xInput = new double[jmlLearningSet][19];
-        double[] xTemp = new double[19];
+        double[] xTemp;
         if (jmlLearningSet > 0) {
             FingerPrint fp;
             for (int i = 0; i < jmlLearningSet; i++) {
-                fp = itm.list.get(i);
+                xTemp = new double[19];
+                fp = listInput.get(i);
                 // persiapkan target berupa angka biner. bersifat unik, didapatkan dari id max di database ditambah 1
                 String targetBiner = Converter.decimalToBinary(fp.getId(), 6);
                 double[] tmpTarget = Converter.stringToArrayDouble(targetBiner);
@@ -1773,6 +1795,8 @@ public class Main extends javax.swing.JFrame {
             jstEngine.trainingJST();
             frmLog.setLog(jstEngine);
             frmLog.setVisible(true);
+            this.btAdd.setEnabled(false);
+            this.btRemove.setEnabled(false);
             this.btSave.setEnabled(true);
             this.btBatal.setEnabled(true);
         }
@@ -1780,18 +1804,22 @@ public class Main extends javax.swing.JFrame {
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
         FingerPrint fp;
-        for (int i = 0; i < itm.list.size(); i++) {
-            fp = itm.list.get(i);
+        for (int i = 0; i < listInput.size(); i++) {
+            fp = listInput.get(i);
             db.insertData(fp);
         }
-
-        for (int i = 0; i < listInput.size(); i++) {
+        db.updateBobotData(jstEngine.getBobot(DELIMITER));
+        for (int i = listInput.size()-1; i >=0; i--) {
             listInput.remove(i);
         }
         this.txtNama.setText("");
+        this.btAdd.setEnabled(true);
+        this.btRemove.setEnabled(true);
         this.btSave.setEnabled(false);
         this.btBatal.setEnabled(false);
+        this.txtBobotAkhir.setText(jstEngine.getBobot(DELIMITER));
         refreshTableInput();
+        counterId = 0;
     }//GEN-LAST:event_btSaveActionPerformed
 
     private void txtMaxEpochFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxEpochFocusLost
@@ -1864,6 +1892,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
         refreshTableData();
+        this.txtBobotAkhir.setText(db.getBobot());
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
     private void txtTesTargetFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTesTargetFocusLost
@@ -1876,6 +1905,19 @@ public class Main extends javax.swing.JFrame {
             this.txtTesTarget.setText(targetDefault);
         }
     }//GEN-LAST:event_txtTesTargetFocusLost
+
+    private void btBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBatalActionPerformed
+        for (int i = 0; i < listInput.size(); i++) {
+            listInput.remove(i);
+        }
+        this.txtNama.setText("");
+        this.btAdd.setEnabled(true);
+        this.btRemove.setEnabled(true);
+        this.btSave.setEnabled(false);
+        this.btBatal.setEnabled(false);
+        refreshTableInput();
+        counterId = 0;
+    }//GEN-LAST:event_btBatalActionPerformed
     public void showAlert(String message, int type) {
         JOptionPane.showMessageDialog(this, message, "Info", JOptionPane.WARNING_MESSAGE);
     }
@@ -1916,6 +1958,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnRecognize;
     private javax.swing.JButton btnTesTraining;
     private javax.swing.JCheckBox cbDefaultParam;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1993,6 +2036,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel pnlTesThreshold;
     private javax.swing.JTable tblData;
     private javax.swing.JTable tblInput;
+    private javax.swing.JTextField txtBobotAkhir;
     private javax.swing.JTextField txtBrowseImage;
     private javax.swing.JTextField txtGambarInput;
     private javax.swing.JTextArea txtHasilRecognition;

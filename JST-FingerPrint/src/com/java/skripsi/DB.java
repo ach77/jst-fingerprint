@@ -47,22 +47,51 @@ public class DB {
         } catch (SQLException ex) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return id+1;
+        return id + 1;
+    }
+
+    public String getBobot() {
+        String result = "";
+        try {
+            PreparedStatement psmnt = connection.prepareStatement("select bobot from tbl_bobot");
+            ResultSet rs = psmnt.executeQuery();
+            while (rs.next()) {
+                result = rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 
     public void insertData(FingerPrint fp) {
         try {
-            PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(NULL,?,?,?)");
-            psmnt.setString(1, fp.getNama());
-            File imgFile = new File("img_tmp");
-            FileOutputStream fos = new FileOutputStream(imgFile);
-            fos.write(fp.getImage());
-            fos.flush();
-            fos.close();
-            FileInputStream fis = new FileInputStream(imgFile);
-            psmnt.setBinaryStream(2, (InputStream) fis, (int) (fp.getImage().length));
-            psmnt.setString(3, fp.getBobot());
-            psmnt.executeUpdate();
+            if (fp.getId() != 0) {
+                PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(?,?,?,?)");
+                psmnt.setInt(1, fp.getId());
+                psmnt.setString(2, fp.getNama());
+                File imgFile = new File("img_tmp");
+                FileOutputStream fos = new FileOutputStream(imgFile);
+                fos.write(fp.getImage());
+                fos.flush();
+                fos.close();
+                FileInputStream fis = new FileInputStream(imgFile);
+                psmnt.setBinaryStream(3, (InputStream) fis, (int) (fp.getImage().length));
+                psmnt.setString(4, fp.getBobot());
+                psmnt.executeUpdate();
+            } else {
+                PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(NULL,?,?,?)");
+                psmnt.setString(1, fp.getNama());
+                File imgFile = new File("img_tmp");
+                FileOutputStream fos = new FileOutputStream(imgFile);
+                fos.write(fp.getImage());
+                fos.flush();
+                fos.close();
+                FileInputStream fis = new FileInputStream(imgFile);
+                psmnt.setBinaryStream(2, (InputStream) fis, (int) (fp.getImage().length));
+                psmnt.setString(3, fp.getBobot());
+                psmnt.executeUpdate();
+            }
         } catch (IOException ex) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -143,5 +172,15 @@ public class DB {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return fp;
+    }
+
+    public void updateBobotData(String bobot) {
+        try {
+            PreparedStatement psmnt = connection.prepareStatement("update tbl_bobot set bobot =? where idbobot= 1");
+            psmnt.setString(1, bobot);
+            psmnt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

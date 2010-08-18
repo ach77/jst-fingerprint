@@ -19,7 +19,8 @@ public class InputTableModel extends AbstractTableModel{
     List<FingerPrint> list = new ArrayList<FingerPrint>();
     Object[][] data;
 
-    public InputTableModel(List<FingerPrint> list) {
+    public InputTableModel(List<FingerPrint> aList) {
+        list = aList;
         data = new Object[list.size()][column.length];
         FingerPrint fp;
         for (int i = 0; i < list.size(); i++) {
@@ -31,15 +32,24 @@ public class InputTableModel extends AbstractTableModel{
         }
     }
 
+     @Override
     public int getRowCount() {
         return list.size();
     }
 
+     @Override
     public int getColumnCount() {
         return column.length;
     }
 
+     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         return data[rowIndex][columnIndex];
     }
+
+    @Override
+    public String getColumnName(int idx) {
+        return column[idx];
+    }
+
 }
