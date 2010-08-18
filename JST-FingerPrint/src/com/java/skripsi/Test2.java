@@ -65,7 +65,8 @@ public class Test2 {
         engine.trainingJST();
 
         //hasil = 0.5< menjadi 0 >0.5 menjadi 1
-        //ex: result3[0]=0.019202959054511776
+        //ex: 
+        //result3[0]=0.019202959054511776 -> 0
         //result3[1]=0.018194101148517952 -> 0
         //result3[2]=0.01918051956173074  -> 0
         //result3[3]=0.01975842541945473  -> 0
