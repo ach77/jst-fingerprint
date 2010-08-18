@@ -10,6 +10,8 @@
  */
 package com.java.skripsi;
 
+import java.awt.BorderLayout;
+
 /**
  *
  * @author omega
@@ -134,7 +136,10 @@ public class LogForm extends javax.swing.JFrame {
             log += "\n\n" + aLog.getLog();
         }
         this.textLog.setText(log);
-        this.pnlChart=chart.getChartPanel(aLog.getChartData());
+        this.pnlChart.removeAll();
+        this.pnlChart.setLayout(new BorderLayout());
+        this.pnlChart.add(chart.getChartPanel(aLog.getChartData()));
+        this.pnlChart.revalidate();        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClose;

@@ -1402,8 +1402,8 @@ public class Main extends javax.swing.JFrame {
         bi = f.getEnhancementImage();
 
 //        //threshold
-//        Thresholder.threshold(bis);
-//        ((ImagePanel) pnlTesThreshold).setImage(bi);
+//        Thresholder thresholder = new Thresholder(bi);
+//        ((ImagePanel) pnlTesThreshold).setImage(thresholder.getResult());
 //
 //        //thinning
 //        Thinner.thin(bis);
@@ -1473,15 +1473,15 @@ public class Main extends javax.swing.JFrame {
         ((ImagePanel) pnlTesFuzzy).setImage(bis);
 
 //        //threshold
-//        Thresholder.threshold(bis);
-//        ((ImagePanel) pnlTesThreshold).setImage(bis);
+        Thresholder thresholder = new Thresholder(bis);
+        ((ImagePanel) pnlTesThreshold).setImage(thresholder.getResult());
 //
 //        //thinning
-//        Thinner.thin(bis);
-//         ((ImagePanel) pnlTesThinning).setImage(bis);
+        Thinner thinner = new Thinner(bis);
+        ((ImagePanel) pnlTesThinning).setImage(thinner.getResult());
 
         //jadikan gambar menjadi grayscale
-        int[][] data = ImageUtil.ImageToBiner(bis);
+        int[][] data = ImageUtil.ImageToBiner(thinner.getResult());
 
         //slice menjadi 19 bagian
         double[] input = imageProcessor.divideImageArray(data);

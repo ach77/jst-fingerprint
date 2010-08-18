@@ -5,17 +5,28 @@
 package com.java.skripsi;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 
 /**
  *
  * @author petra, omega
  */
 public class Thresholder {
+    private BufferedImage image,dst;
 
-    private static final int CONSTANT_BLACK = 0xff000000;
-    private static final int CONSTANT_WHITE = 0xffffffff;
+    private final int CONSTANT_BLACK = 0xff000000;
+    private final int CONSTANT_WHITE = 0xffffffff;
 
-    public static void threshold(BufferedImage image) {
+    public Thresholder(BufferedImage image) {
+        this.image = image;
+        threshold();
+    }
+
+    public void threshold() {
+        BufferedImage im = new BufferedImage(image.getWidth(),
+                image.getHeight(),BufferedImage.TYPE_BYTE_GRAY);
+        WritableRaster raster = im.getRaster();
+        
         int thresholdvalues[] = new int[256];
         int w = image.getWidth();
         int h = image.getHeight();
@@ -59,13 +70,22 @@ public class Thresholder {
                 int cblue = (color & 0x000000ff);
                 int cc = ((int) (cred + cgreen + cblue) / 3);
                 if (cc == nmax2) {
-                    image.setRGB(x, y, CONSTANT_BLACK);
+                    raster.setSample(x, y, 0, CONSTANT_BLACK);
+                    // image.setRGB(x, y, CONSTANT_BLACK);
                 } else if (cc == nmax1) {
-                    image.setRGB(x, y, CONSTANT_WHITE);
+                    raster.setSample(x, y, 0, CONSTANT_WHITE);
+                    // image.setRGB(x, y, CONSTANT_WHITE);
                 } else {
-                    image.setRGB(x, y, CONSTANT_WHITE);
+                    raster.setSample(x, y, 0, CONSTANT_WHITE);
+                    // image.setRGB(x, y, CONSTANT_WHITE);
                 }
             }
         }
+
+       this.dst = im;
+    }
+
+    public BufferedImage getResult() {
+        return this.dst;
     }
 }

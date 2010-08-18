@@ -8,10 +8,7 @@ import java.awt.Color;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -50,9 +47,7 @@ public class MseChart {
         return dataSetColl;
     }
 
-    private JFreeChart createChart(final XYDataset dataset) {
-
-        // create the chart...
+    private JFreeChart createChart(final XYDataset dataset) {        
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 "Mean Square Error", // chart title
                 "epoch", // x axis label
@@ -63,26 +58,9 @@ public class MseChart {
                 true, // tooltips
                 false // urls
                 );
-
-        // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
+        
         chart.setBackgroundPaint(Color.white);
-
-        // get a reference to the plot for further customisation...
-        final XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(Color.lightGray);
-        plot.setDomainGridlinePaint(Color.white);
-        plot.setRangeGridlinePaint(Color.white);
-
-        final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, false);
-        renderer.setSeriesShapesVisible(1, false);
-        plot.setRenderer(renderer);
-
-        // change the auto tick unit selection to integer units only...
-        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        // OPTIONAL CUSTOMISATION COMPLETED.
-
+        
         return chart;
 
     }
