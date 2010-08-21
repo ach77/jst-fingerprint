@@ -1712,8 +1712,9 @@ public class Main extends javax.swing.JFrame {
             double[] tmpX = imageProcessor.divideImageArray(data);
             String strInput = "";
             //set input string dg format input[0]:input[1]:dst...
+            Converter.setFraction(2);
             for (int j = 0; j < tmpX.length; j++) {
-                strInput += j != tmpX.length - 1 ? tmpX[j] + DELIMITER : tmpX[j];
+                strInput += j != tmpX.length - 1 ? Converter.formatString(tmpX[j]) + DELIMITER : Converter.formatString(tmpX[j]);
             }
 
             int newId = counterId == 0 ? db.getNewId() : (db.getNewId() + counterId);
