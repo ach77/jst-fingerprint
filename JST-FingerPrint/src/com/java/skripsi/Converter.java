@@ -4,11 +4,23 @@
  */
 package com.java.skripsi;
 
+import java.text.NumberFormat;
+
 /**
  *
  * @author omega
  */
 public class Converter {
+
+    public static NumberFormat numberFormat;
+
+    public static void setFraction(int fraction){
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(fraction);
+    }
+    public static String formatString(double num) {
+        return numberFormat.format(num).replace(",", ".");
+    }
 
     public static String decimalToBinary(int decimal, int digit) {
         String result = "";
@@ -47,10 +59,10 @@ public class Converter {
         return array;
     }
 
-    public static boolean cekBiner(String str){
+    public static boolean cekBiner(String str) {
         boolean valid = true;
         for (int i = 0; i < str.length(); i++) {
-            if(str.charAt(i)!='0' || str.charAt(i)!='1'){
+            if (str.charAt(i) != '0' || str.charAt(i) != '1') {
                 return false;
             }
         }

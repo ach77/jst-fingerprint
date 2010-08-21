@@ -38,7 +38,7 @@ public class MseChart {
     public XYDataset createDataset() {
         final XYSeries series2 = new XYSeries("MSE");
         for (int i = 0; i < datas.length; i++) {
-            series2.add(datas[i], (i+1));
+            series2.add((i + 1), datas[i]);
         }
 
         XYSeriesCollection dataSetColl = new XYSeriesCollection();
@@ -47,7 +47,7 @@ public class MseChart {
         return dataSetColl;
     }
 
-    private JFreeChart createChart(final XYDataset dataset) {        
+    private JFreeChart createChart(final XYDataset dataset) {
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 "Mean Square Error", // chart title
                 "epoch", // x axis label
@@ -58,9 +58,9 @@ public class MseChart {
                 true, // tooltips
                 false // urls
                 );
-        
+
         chart.setBackgroundPaint(Color.white);
-        
+
         return chart;
 
     }

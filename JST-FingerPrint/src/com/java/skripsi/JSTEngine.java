@@ -200,7 +200,6 @@ public class JSTEngine implements LogInterface {
                 // hitung deltaV0
                 for (int i = 0; i < jmlHidden; i++) {
                     deltaV0[i] = lr * gamma[i];
-
                 }
                 //hitung w baru
                 for (int i = 0; i < jmlHidden; i++) {
@@ -208,11 +207,22 @@ public class JSTEngine implements LogInterface {
                         w[i][j] += deltaW[i][j];
                     }
                 }
+
+                //hitung w0 baru
+                for (int i = 0; i < jmlOutput; i++) {
+                    w0[i] += deltaW0[i];
+                }
+
                 //hitung v baru
                 for (int i = 0; i < jmlInput; i++) {
                     for (int j = 0; j < jmlHidden; j++) {
                         v[i][j] += deltaV[i][j];
                     }
+                }
+
+                //hitung v0 baru
+                for (int i = 0; i < jmlHidden; i++) {
+                    v0[i] += deltaV0[i];
                 }
                 if (mse < targetError) {
                     break;
