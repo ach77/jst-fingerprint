@@ -128,16 +128,16 @@ public class FuzzyEnhancementInt {
         return this.dst;
     }    
 
-    public static void main(String[] args) {
-        try {
-            BufferedImage buffImage = ImageIO.read(new File("input.png"));
-
-            FuzzyEnhancementInt fei = new FuzzyEnhancementInt(buffImage);            
-            fei.processEnhancement();
-
-            ImageIO.write(fei.getEnhancementImage(), "jpg", new File("input_result.jpg"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            BufferedImage buffImage = ImageIO.read(new File("input.png"));
+//
+//            FuzzyEnhancementInt fei = new FuzzyEnhancementInt(buffImage);
+//            fei.processEnhancement();
+//
+//            ImageIO.write(fei.getEnhancementImage(), "jpg", new File("input_result.jpg"));
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 }
