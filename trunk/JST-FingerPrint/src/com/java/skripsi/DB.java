@@ -20,10 +20,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Andi Taru NNW
- */
 public class DB {
 
     Connection connection;

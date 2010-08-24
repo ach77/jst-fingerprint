@@ -8,10 +8,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.JPanel;
 
-/**
- *
- * @author Andi Taru NNW
- */
 public class ImagePanel extends JPanel {
 
     Image image;

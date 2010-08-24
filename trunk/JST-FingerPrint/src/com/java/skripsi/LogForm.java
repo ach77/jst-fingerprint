@@ -1,21 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/*
- * LogForm.java
- *
- * Created on 13 Agu 10, 8:24:41
- */
 package com.java.skripsi;
 
 import java.awt.BorderLayout;
 
-/**
- *
- * @author omega
- */
 public class LogForm extends javax.swing.JFrame {
 
     String log;

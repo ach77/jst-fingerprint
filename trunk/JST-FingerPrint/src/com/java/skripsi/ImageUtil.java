@@ -21,10 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
-/**
- *
- * @author Andi Taru NNW
- */
 public class ImageUtil {
 
     public static BufferedImage ImageToBufferedImage(Image imageIn, Component comp) {

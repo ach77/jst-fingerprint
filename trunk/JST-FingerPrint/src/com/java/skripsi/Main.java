@@ -24,12 +24,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author user
- */
 public class Main extends javax.swing.JFrame {
 
     /** Creates new form Main */

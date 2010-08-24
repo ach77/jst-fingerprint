@@ -6,10 +6,6 @@ package com.java.skripsi;
 
 import java.util.Random;
 
-/**
- *
- * @author Omega
- */
 public class Test2 {
 
     Random r = new Random();

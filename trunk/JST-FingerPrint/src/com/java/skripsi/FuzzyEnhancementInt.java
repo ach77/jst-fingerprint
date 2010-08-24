@@ -8,16 +8,9 @@ package com.java.skripsi;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import javax.imageio.ImageIO;
 
-/**
- *
- * @author Andi Taru NNW
- */
 public class FuzzyEnhancementInt {
     private BufferedImage src, dst;
     private int width = 0, height = 0;

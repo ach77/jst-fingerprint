@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-/**
- *
- * @author omega
- */
 public class InputTableModel extends AbstractTableModel{
 
     int row;

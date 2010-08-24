@@ -6,10 +6,6 @@ package com.java.skripsi;
 
 import java.text.NumberFormat;
 
-/**
- *
- * @author omega
- */
 public class Converter {
 
     public static NumberFormat numberFormat;

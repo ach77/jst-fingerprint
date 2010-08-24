@@ -5,10 +5,6 @@
 
 package com.java.skripsi;
 
-/**
- *
- * @author omega
- */
 public interface LogInterface {
     public String getLog();
 

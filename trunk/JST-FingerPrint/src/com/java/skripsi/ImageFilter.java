@@ -8,10 +8,6 @@ package com.java.skripsi;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
-/**
- *
- * @author Andi Taru NNW
- */
 public class ImageFilter extends FileFilter {
 
     @Override

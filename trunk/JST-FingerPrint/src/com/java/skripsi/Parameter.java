@@ -4,10 +4,6 @@
  */
 package com.java.skripsi;
 
-/**
- *
- * @author omega
- */
 public class Parameter {
 
     int maxEpoch;
