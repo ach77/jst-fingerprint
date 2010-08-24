@@ -7,10 +7,6 @@ package com.java.skripsi;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
-/**
- *
- * @author omega
- */
 public class DataTableModel extends AbstractTableModel {
 
     int row;

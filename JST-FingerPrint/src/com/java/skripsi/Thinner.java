@@ -7,10 +7,6 @@ package com.java.skripsi;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
-/**
- *
- * @author petra, omega
- */
 public class Thinner {
 
     private BufferedImage dst;

@@ -4,10 +4,6 @@
  */
 package com.java.skripsi;
 
-/**
- *
- * @author Andi Taru NNW
- */
 public class FingerPrint {
 
     private int id;

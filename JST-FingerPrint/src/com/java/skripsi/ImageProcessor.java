@@ -5,12 +5,7 @@
 package com.java.skripsi;
 
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- *
- * @author omega
- */
 public class ImageProcessor {
 
     public ArrayList<int[][]> list;
