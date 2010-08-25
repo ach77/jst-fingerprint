@@ -75,9 +75,9 @@ public class FuzzyEnhancementInt {
         double jarak = (maxLevel - minLevel)/3;
         this.middleLevel = maxLevel-(int)jarak;
 
-        System.out.println("Min Level: " + minLevel);
-        System.out.println("Max Level: " + maxLevel);
-        System.out.println("Middle Level: " + middleLevel);
+//        System.out.println("Min Level: " + minLevel);
+//        System.out.println("Max Level: " + maxLevel);
+//        System.out.println("Middle Level: " + middleLevel);
     }   
 
     public void processEnhancement() {

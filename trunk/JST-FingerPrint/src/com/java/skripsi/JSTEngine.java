@@ -162,6 +162,7 @@ public class JSTEngine implements LogInterface {
                 error = 0;
                 for (int i = 0; i < jmlOutput; i++) {
                     error += Math.pow(tTemp[i] - y[i], 2) * 0.5;    //0.5 = degree of freedom for error
+//                    error += Math.pow(tTemp[i] - y[i], 2);    //0.5 = degree of freedom for error
                 }
                 mse = error;
 
