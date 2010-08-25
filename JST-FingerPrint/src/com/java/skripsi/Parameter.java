@@ -28,11 +28,11 @@ public class Parameter {
 
     public void setToDefault() {
         this.maxEpoch = 1000;
-        this.target = 0.01;
-        this.learningRate = 1;
-        this.numHiddenLayer = 6;
+        this.target = 0.0001;
+        this.learningRate = 0.5;
+        this.numHiddenLayer = 20;
         this.minRandom = 0;
-        this.maxRandom = 0.35;
+        this.maxRandom = 0.7;
     }
 
     public double getLearningRate() {

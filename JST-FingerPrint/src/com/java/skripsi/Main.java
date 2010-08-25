@@ -535,16 +535,16 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
-                    .addComponent(btnDataHapus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlDatabaseLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                        .addComponent(txtBobotAkhir, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtBobotAkhir, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDataHapus, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         pnlDatabaseLayout.setVerticalGroup(
             pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlDatabaseLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnDataHapus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1414,6 +1414,7 @@ public class Main extends javax.swing.JFrame {
 
         try {
             if (jfc.getSelectedFile() != null) {
+                fileTmp2 = jfc.getSelectedFile();
                 txtGambarInput.setText(jfc.getSelectedFile().getAbsolutePath());
                 Image image = Toolkit.getDefaultToolkit().getImage(jfc.getSelectedFile().toURI().toURL());
                 ((ImagePanel) pnlGambarInput).setImage(image);
@@ -1421,6 +1422,7 @@ public class Main extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btnBrowseInputActionPerformed
+    private File fileTmp2;
 
     private void refreshTableData() {
         dtm = new DataTableModel(db);
@@ -1434,8 +1436,11 @@ public class Main extends javax.swing.JFrame {
 
     private void btnDataHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataHapusActionPerformed
         if (tblData.getSelectedRow() != -1) {
-            FingerPrint fp = dtm.list.get(tblData.getSelectedRow());
-            db.deleteData(fp.getId());
+            int[] idxs = tblData.getSelectedRows();
+            for (int i = idxs.length; i > 0; i--) {
+                FingerPrint fp = dtm.list.get(idxs[i - 1]);
+                db.deleteData(fp.getId());
+            }
             refreshTableData();
         } else {
             showAlert("Seleksi data terlebih dahulu", JOptionPane.WARNING_MESSAGE);
@@ -1451,10 +1456,16 @@ public class Main extends javax.swing.JFrame {
             return;
         }
         boolean isMatch = false;
-        FingerPrint fp=null;
+        FingerPrint fp = null;
         this.txtHasilRecognition.setText("");
         Image image = ((ImagePanel) pnlGambarInput).getImage();
-        BufferedImage bi = ImageUtil.ImageToBufferedImage(image, this);
+//        BufferedImage bi = ImageUtil.ImageToBufferedImage(image, this);
+        BufferedImage bi = null;
+        try {
+            bi = ImageIO.read(fileTmp2);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         //fuzzy enhancement
         FuzzyEnhancementInt f = new FuzzyEnhancementInt(bi);
         f.processEnhancement();
@@ -1471,6 +1482,10 @@ public class Main extends javax.swing.JFrame {
 
         //slice menjadi 19 bagian
         double[] input = imageProcessor.divideImageArray(data);
+//        for (int i = 0; i < input.length; i++) {
+//            input[i] = input[i] > 0.5 ? 1 : 0;
+//            System.out.print(input[i] + " ");
+//        }
 
         //menghitung satu per satu kecocokan sidik jari dengan data di database
         ArrayList<FingerPrint> list = db.getData();
@@ -1676,10 +1691,8 @@ public class Main extends javax.swing.JFrame {
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
         if (fileTmp == null || this.txtBrowseImage.getText().isEmpty()) {
             showAlert("Image harus tersedia", JOptionPane.WARNING_MESSAGE);
-            return;
         } else if (this.txtNama.getText().isEmpty()) {
             showAlert("Nama harus diisi", JOptionPane.WARNING_MESSAGE);
-            return;
         } else {
             // ambil data gambar
             BufferedImage bi = null;
@@ -1710,6 +1723,8 @@ public class Main extends javax.swing.JFrame {
             Converter.setFraction(2);
             for (int j = 0; j < tmpX.length; j++) {
                 strInput += j != tmpX.length - 1 ? Converter.formatString(tmpX[j]) + DELIMITER : Converter.formatString(tmpX[j]);
+//                int hasil = tmpX[j] < 0.5 ? 0 : 1;
+//                strInput += j != tmpX.length - 1 ? hasil + DELIMITER : hasil;
             }
 
             int newId = counterId == 0 ? db.getNewId() : (db.getNewId() + counterId);
@@ -1796,6 +1811,17 @@ public class Main extends javax.swing.JFrame {
             this.btSave.setEnabled(true);
             this.btBatal.setEnabled(true);
         }
+
+
+//        for (int i = 0; i < xInput.length; i++) {
+//            System.out.println("");
+//            System.out.print(i+":");
+//            double []result =jstEngine.recognizeJST(xInput[i]);
+//            for (int j = 0; j < result.length; j++) {
+//                int a = result[j]>0.5?1:0;
+//                System.out.print(a+" ");
+//            }
+//        }
     }//GEN-LAST:event_btTrainingActionPerformed
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
@@ -1805,7 +1831,7 @@ public class Main extends javax.swing.JFrame {
             db.insertData(fp);
         }
         db.updateBobotData(jstEngine.getBobot(DELIMITER));
-        for (int i = listInput.size()-1; i >=0; i--) {
+        for (int i = listInput.size() - 1; i >= 0; i--) {
             listInput.remove(i);
         }
         this.txtNama.setText("");
@@ -1876,8 +1902,8 @@ public class Main extends javax.swing.JFrame {
         if (this.txtMaxRandom.getText().isEmpty()) {
             showAlert("Maksimum Random harus diisi", JOptionPane.WARNING_MESSAGE);
             this.txtMaxRandom.setText(String.valueOf(param.getMaxRandom()));
-        } else if (Double.parseDouble(this.txtMaxRandom.getText()) < 0.1 || Double.parseDouble(this.txtMaxRandom.getText()) > 1) {
-            showAlert("Maksimum Random harus bernilai antara 0.1 - 1", JOptionPane.WARNING_MESSAGE);
+        } else if (Double.parseDouble(this.txtMaxRandom.getText()) < 0 || Double.parseDouble(this.txtMaxRandom.getText()) > 1) {
+            showAlert("Maksimum Random harus bernilai antara 0 - 1", JOptionPane.WARNING_MESSAGE);
             this.txtMaxRandom.setText(String.valueOf(param.getMaxRandom()));
         } else if (Double.parseDouble(this.txtMaxRandom.getText()) < Double.parseDouble(this.txtMinRandom.getText())) {
             showAlert("Maksimum Random harus lebih besar daripada Minimum Random", JOptionPane.WARNING_MESSAGE);
