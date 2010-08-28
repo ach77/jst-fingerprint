@@ -32,7 +32,7 @@ public class Main extends javax.swing.JFrame {
     private DB db;
     private JSTEngine jstEngine;
     private ImageProcessor imageProcessor;
-    private File fileTmp = null;
+    private File[] fileTmp = {null, null, null};
     private DataTableModel dtm;
     private InputTableModel itm;
     private Parameter param;
@@ -121,6 +121,10 @@ public class Main extends javax.swing.JFrame {
         tblInput = new javax.swing.JTable();
         btBatal = new javax.swing.JButton();
         lblProses = new javax.swing.JLabel();
+        txtBrowseImage2 = new javax.swing.JTextField();
+        txtBrowseImage3 = new javax.swing.JTextField();
+        btBrowse2 = new javax.swing.JButton();
+        btBrowse3 = new javax.swing.JButton();
         pnlDatabase = new javax.swing.JPanel();
         btnDataHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -301,7 +305,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(txtLR, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                         .addComponent(txtTargetError, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                         .addComponent(txtMaxEpoch, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)))
-                .addGap(248, 248, 248))
+                .addGap(246, 246, 246))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,6 +400,20 @@ public class Main extends javax.swing.JFrame {
 
         lblProses.setText(" ");
 
+        btBrowse2.setText("BROWSE");
+        btBrowse2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBrowse2ActionPerformed(evt);
+            }
+        });
+
+        btBrowse3.setText("BROWSE");
+        btBrowse3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBrowse3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -403,15 +421,25 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18)
                     .addComponent(jLabel17)
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel18))
+                    .addComponent(jLabel16))
                 .addGap(63, 63, 63)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtBrowseImage3, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                            .addComponent(txtNama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                            .addComponent(txtBrowseImage, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                            .addComponent(txtBrowseImage2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btBrowse3)
+                            .addComponent(btBrowse)
+                            .addComponent(btBrowse2)))
                     .addComponent(btTraining, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addComponent(lblProses, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                        .addGap(359, 359, 359)
                         .addComponent(btRemove)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -419,13 +447,9 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                         .addComponent(btBatal, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btSave))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtNama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
-                            .addComponent(txtBrowseImage, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btBrowse)))
+                        .addComponent(btSave)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblProses, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -435,46 +459,60 @@ public class Main extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jLabel16)
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel18))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtBrowseImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btBrowse))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btAdd)
-                        .addComponent(btRemove))
-                    .addComponent(lblProses))
-                .addGap(13, 13, 13)
-                .addComponent(btTraining)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btSave)
-                    .addComponent(btBatal))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btBrowse)))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel16)
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel8Layout.createSequentialGroup()
+                                .addGap(102, 102, 102)
+                                .addComponent(lblProses))
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtBrowseImage2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btBrowse2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btBrowse3)
+                                    .addComponent(txtBrowseImage3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel8Layout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addComponent(jLabel18))
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btAdd)
+                                    .addComponent(btRemove))
+                                .addGap(13, 13, 13)
+                                .addComponent(btTraining)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btSave)
+                                    .addComponent(btBatal))))))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout pnlInputLayout = new javax.swing.GroupLayout(pnlInput);
         pnlInput.setLayout(pnlInputLayout);
         pnlInputLayout.setHorizontalGroup(
             pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInputLayout.createSequentialGroup()
+            .addGroup(pnlInputLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         pnlInputLayout.setVerticalGroup(
             pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -482,8 +520,8 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Input & Parameter", pnlInput);
@@ -534,10 +572,10 @@ public class Main extends javax.swing.JFrame {
             .addGroup(pnlDatabaseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
                     .addGroup(pnlDatabaseLayout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                         .addComponent(txtBobotAkhir, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnDataHapus, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
@@ -547,7 +585,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnDataHapus)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -573,13 +611,13 @@ public class Main extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -625,7 +663,7 @@ public class Main extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtGambarInput, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                        .addComponent(txtGambarInput, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBrowseInput, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -633,7 +671,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(pnlGambarInput, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(btnRecognize, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)))
+                        .addComponent(btnRecognize, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -1351,22 +1389,22 @@ public class Main extends javax.swing.JFrame {
                         .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(14, Short.MAX_VALUE))
+                        .addContainerGap(19, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTesLayout.createSequentialGroup()
                         .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addComponent(jLabel19))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtTesTarget, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                            .addComponent(txtTesBrowse, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
+                        .addGroup(pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTesTarget, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                            .addComponent(txtTesBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBrowseTest)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnTesTraining)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnClearTes, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(130, 130, 130))))
+                        .addGap(108, 108, 108))))
         );
         pnlTesLayout.setVerticalGroup(
             pnlTesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1385,7 +1423,7 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1395,11 +1433,11 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Image Databases");
@@ -1458,7 +1496,7 @@ public class Main extends javax.swing.JFrame {
         boolean isMatch = false;
         FingerPrint fp = null;
         this.txtHasilRecognition.setText("");
-        Image image = ((ImagePanel) pnlGambarInput).getImage();
+//        Image image = ((ImagePanel) pnlGambarInput).getImage();
 //        BufferedImage bi = ImageUtil.ImageToBufferedImage(image, this);
         BufferedImage bi = null;
         try {
@@ -1482,10 +1520,10 @@ public class Main extends javax.swing.JFrame {
 
         //slice menjadi 19 bagian
         double[] input = imageProcessor.divideImageArray(data);
-//        for (int i = 0; i < input.length; i++) {
-//            input[i] = input[i] > 0.5 ? 1 : 0;
-//            System.out.print(input[i] + " ");
-//        }
+        Converter.setFraction(2);
+        for (int i = 0; i < input.length; i++) {
+            input[i] = Double.parseDouble(Converter.formatString(input[i]));
+        }
 
         //menghitung satu per satu kecocokan sidik jari dengan data di database
         ArrayList<FingerPrint> list = db.getData();
@@ -1679,8 +1717,18 @@ public class Main extends javax.swing.JFrame {
         jfc.showOpenDialog(this);
 
         if (jfc.getSelectedFile() != null) {
-            txtBrowseImage.setText(jfc.getSelectedFile().getAbsolutePath());
-            fileTmp = jfc.getSelectedFile();
+//            if (jfc.getSelectedFiles().length == 1) {
+                txtBrowseImage.setText(jfc.getSelectedFile().getAbsolutePath());
+                fileTmp[0] = jfc.getSelectedFile();
+//            } else if (jfc.getSelectedFiles().length == 3) {
+//                File[] files = jfc.getSelectedFiles();
+//                txtBrowseImage.setText(files[0].getAbsolutePath());
+//                txtBrowseImage2.setText(files[1].getAbsolutePath());
+//                txtBrowseImage3.setText(files[2].getAbsolutePath());
+//                fileTmp[0] = files[0];
+//                fileTmp[1] = files[1];
+//                fileTmp[2] = files[2];
+//            }
         }
     }//GEN-LAST:event_btBrowseActionPerformed
 
@@ -1695,51 +1743,59 @@ public class Main extends javax.swing.JFrame {
             showAlert("Nama harus diisi", JOptionPane.WARNING_MESSAGE);
         } else {
             // ambil data gambar
-            BufferedImage bi = null;
-            try {
-                bi = ImageIO.read(fileTmp);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            String[] arrBobot = new String[3];
+            for (int i = 0; i < fileTmp.length; i++) {
+                if (fileTmp[i] != null) {
+                    BufferedImage bi = null;
+                    try {
+                        bi = ImageIO.read(fileTmp[i]);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
 
-            // lakukan fuzzy
-            FuzzyEnhancementInt f = new FuzzyEnhancementInt(bi);
-            f.processEnhancement();
-            bi = f.getEnhancementImage();
+                    // lakukan fuzzy
+                    FuzzyEnhancementInt f = new FuzzyEnhancementInt(bi);
+                    f.processEnhancement();
+                    bi = f.getEnhancementImage();
 
-            //threshold
-            Thresholder thresholder = new Thresholder(bi);
+                    //threshold
+                    Thresholder thresholder = new Thresholder(bi);
 
-            //thinning
-            Thinner thinner = new Thinner(bi);
+                    //thinning
+                    Thinner thinner = new Thinner(bi);
 
-            //jadikan gambar menjadi grayscale
-            int[][] data = ImageUtil.ImageToBiner(thinner.getResult());
+                    //jadikan gambar menjadi grayscale
+                    int[][] data = ImageUtil.ImageToBiner(thinner.getResult());
 
-            // potong2 gambar menjadi 19 bagian
-            double[] tmpX = imageProcessor.divideImageArray(data);
-            String strInput = "";
-            //set input string dg format input[0]:input[1]:dst...
-            Converter.setFraction(2);
-            for (int j = 0; j < tmpX.length; j++) {
-                strInput += j != tmpX.length - 1 ? Converter.formatString(tmpX[j]) + DELIMITER : Converter.formatString(tmpX[j]);
+                    // potong2 gambar menjadi 19 bagian
+                    double[] tmpX = imageProcessor.divideImageArray(data);
+                    arrBobot[i] = "";
+                    //set input string dg format input[0]:input[1]:dst...
+                    Converter.setFraction(2);
+                    for (int j = 0; j < tmpX.length; j++) {
+                        arrBobot[i] += j != tmpX.length - 1 ? Converter.formatString(tmpX[j]) + DELIMITER : Converter.formatString(tmpX[j]);
 //                int hasil = tmpX[j] < 0.5 ? 0 : 1;
 //                strInput += j != tmpX.length - 1 ? hasil + DELIMITER : hasil;
+                    }
+                }
             }
-
             int newId = counterId == 0 ? db.getNewId() : (db.getNewId() + counterId);
             FingerPrint fp = new FingerPrint();
             fp.setId(newId);
             fp.setNama(this.txtNama.getText().trim());
-            fp.setImage(ImageUtil.fileToByteArray(fileTmp));
-            fp.setBobot(strInput);
+            fp.setImage(ImageUtil.fileToByteArray(fileTmp[0]));
+            fp.setBobots(arrBobot);
             listInput.add(fp);
             refreshTableInput();
             counterId++;
 
             this.txtBrowseImage.setText("");
+            this.txtBrowseImage2.setText("");
+            this.txtBrowseImage3.setText("");
             this.txtNama.setText("");
-            fileTmp = null;
+            fileTmp[0] = null;
+            fileTmp[1] = null;
+            fileTmp[2] = null;
         }
     }//GEN-LAST:event_btAddActionPerformed
 
@@ -1767,28 +1823,37 @@ public class Main extends javax.swing.JFrame {
         //siapkan form log
         frmLog.clearLog();
         //tentukan jumlah learning set
-        int jmlLearningSet = listInput.size();
+        int jmlLearningSet = 0;
+        FingerPrint fp;
+        for (int i = 0; i < listInput.size(); i++) {
+            fp = listInput.get(i);
+            jmlLearningSet += fp.getNumBobots();
+        }
 
         //proses persiapan input dan target
         double[][] target = new double[jmlLearningSet][6];
         double[][] xInput = new double[jmlLearningSet][19];
         double[] xTemp;
+        int idxLearningSet = 0;
         if (jmlLearningSet > 0) {
-            FingerPrint fp;
-            for (int i = 0; i < jmlLearningSet; i++) {
-                xTemp = new double[19];
+            for (int i = 0; i < listInput.size(); i++) {
                 fp = listInput.get(i);
                 // persiapkan target berupa angka biner. bersifat unik, didapatkan dari id max di database ditambah 1
                 String targetBiner = Converter.decimalToBinary(fp.getId(), 6);
                 double[] tmpTarget = Converter.stringToArrayDouble(targetBiner);
                 //membentuk input menjadi array 2 dimensi
-                String[] strInput = fp.getBobot().split(DELIMITER);
-                for (int j = 0; j < strInput.length; j++) {
-                    xTemp[j] = Double.parseDouble(strInput[j]);
+                String[] bobots = fp.getBobots();
+                for (int j = 0; j < bobots.length; j++) {
+                    xTemp = new double[19];
+                    String[] strInput = bobots[j].split(DELIMITER);
+                    for (int k = 0; k < strInput.length; k++) {
+                        xTemp[k] = Double.parseDouble(strInput[k]);
+                    }
+                    xInput[idxLearningSet] = xTemp;
+                    //membentuk target menjadi array 2 dimensi
+                    target[idxLearningSet] = tmpTarget;
+                    idxLearningSet++;
                 }
-                xInput[i] = xTemp;
-                //membentuk target menjadi array 2 dimensi
-                target[i] = tmpTarget;
             }
 
             //lakukan training berdasar parameter, input dan target yg telah dihitung sebelumnya
@@ -1815,12 +1880,13 @@ public class Main extends javax.swing.JFrame {
 
 //        for (int i = 0; i < xInput.length; i++) {
 //            System.out.println("");
-//            System.out.print(i+":");
-//            double []result =jstEngine.recognizeJST(xInput[i]);
+//            System.out.print(i + ":");
+//            double[] result = jstEngine.recognizeJST(xInput[i]);
 //            for (int j = 0; j < result.length; j++) {
-//                int a = result[j]>0.5?1:0;
-//                System.out.print(a+" ");
+//                int a = result[j] > 0.5 ? 1 : 0;
+//                System.out.print(a + " ");
 //            }
+//            System.out.println("detail:" + jstEngine.getLog());
 //        }
     }//GEN-LAST:event_btTrainingActionPerformed
 
@@ -1940,6 +2006,28 @@ public class Main extends javax.swing.JFrame {
         refreshTableInput();
         counterId = 0;
     }//GEN-LAST:event_btBatalActionPerformed
+
+    private void btBrowse2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBrowse2ActionPerformed
+        JFileChooser jfc = new JFileChooser(new File("images"));
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.showOpenDialog(this);
+
+        if (jfc.getSelectedFile() != null) {
+            txtBrowseImage2.setText(jfc.getSelectedFile().getAbsolutePath());
+            fileTmp[1] = jfc.getSelectedFile();
+        }
+    }//GEN-LAST:event_btBrowse2ActionPerformed
+
+    private void btBrowse3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBrowse3ActionPerformed
+        JFileChooser jfc = new JFileChooser(new File("images"));
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.showOpenDialog(this);
+
+        if (jfc.getSelectedFile() != null) {
+            txtBrowseImage3.setText(jfc.getSelectedFile().getAbsolutePath());
+            fileTmp[2] = jfc.getSelectedFile();
+        }
+    }//GEN-LAST:event_btBrowse3ActionPerformed
     public void showAlert(String message, int type) {
         JOptionPane.showMessageDialog(this, message, "Info", JOptionPane.WARNING_MESSAGE);
     }
@@ -1970,6 +2058,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btAdd;
     private javax.swing.JButton btBatal;
     private javax.swing.JButton btBrowse;
+    private javax.swing.JButton btBrowse2;
+    private javax.swing.JButton btBrowse3;
     private javax.swing.JButton btRemove;
     private javax.swing.JButton btSave;
     private javax.swing.JButton btTraining;
@@ -2060,6 +2150,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTable tblInput;
     private javax.swing.JTextField txtBobotAkhir;
     private javax.swing.JTextField txtBrowseImage;
+    private javax.swing.JTextField txtBrowseImage2;
+    private javax.swing.JTextField txtBrowseImage3;
     private javax.swing.JTextField txtGambarInput;
     private javax.swing.JTextArea txtHasilRecognition;
     private javax.swing.JTextField txtJmlHiddenLayer;

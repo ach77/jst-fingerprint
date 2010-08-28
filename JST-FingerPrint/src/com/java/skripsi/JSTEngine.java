@@ -272,13 +272,13 @@ public class JSTEngine implements LogInterface {
         for (int i = 0; i < input.length; i++) {
             log += i != (input.length - 1) ? input[i] + "," : input[i];
         }
-        log += "-Hidden:\n";
+        log += "\n-Hidden:\n";
         for (int i = 0; i < jmlHidden; i++) {
-            log += "z[" + i + "]:" + z[i];
+            log += "z[" + i + "]:" + z[i] + "\n";
         }
-        log += "-Output:\n";
+        log += "\n-Output:\n";
         for (int i = 0; i < jmlOutput; i++) {
-            log += "y[" + i + "]:" + y[i];
+            log += "y[" + i + "]:" + y[i] + "\n";
         }
     }
 
