@@ -63,7 +63,7 @@ public class DB {
     public void insertData(FingerPrint fp) {
         try {
             if (fp.getId() != 0) {
-                PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(?,?,?,?)");
+                PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(?,?,?,?,?,?)");
                 psmnt.setInt(1, fp.getId());
                 psmnt.setString(2, fp.getNama());
                 File imgFile = new File("img_tmp");
@@ -73,10 +73,12 @@ public class DB {
                 fos.close();
                 FileInputStream fis = new FileInputStream(imgFile);
                 psmnt.setBinaryStream(3, (InputStream) fis, (int) (fp.getImage().length));
-                psmnt.setString(4, fp.getBobot());
+                psmnt.setString(4, fp.getBobot1());
+                psmnt.setString(5, fp.getBobot2());
+                psmnt.setString(6, fp.getBobot3());
                 psmnt.executeUpdate();
             } else {
-                PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(NULL,?,?,?)");
+                PreparedStatement psmnt = connection.prepareStatement("insert into tbl_fp values(NULL,?,?,?,?,?)");
                 psmnt.setString(1, fp.getNama());
                 File imgFile = new File("img_tmp");
                 FileOutputStream fos = new FileOutputStream(imgFile);
@@ -85,7 +87,9 @@ public class DB {
                 fos.close();
                 FileInputStream fis = new FileInputStream(imgFile);
                 psmnt.setBinaryStream(2, (InputStream) fis, (int) (fp.getImage().length));
-                psmnt.setString(3, fp.getBobot());
+                psmnt.setString(3, fp.getBobot1());
+                psmnt.setString(4, fp.getBobot2());
+                psmnt.setString(5, fp.getBobot3());
                 psmnt.executeUpdate();
             }
         } catch (IOException ex) {
@@ -127,7 +131,9 @@ public class DB {
                 }
                 in.close();
                 fp.setImage(baos.toByteArray());
-                fp.setBobot(rs.getString("bobot"));
+                fp.setBobot1(rs.getString("bobot1"));
+                fp.setBobot2(rs.getString("bobot2"));
+                fp.setBobot3(rs.getString("bobot3"));
                 list.add(fp);
             }
         } catch (IOException ex) {
@@ -160,7 +166,9 @@ public class DB {
                 }
                 in.close();
                 fp.setImage(baos.toByteArray());
-                fp.setBobot(rs.getString("bobot"));
+                fp.setBobot1(rs.getString("bobot1"));
+                fp.setBobot2(rs.getString("bobot2"));
+                fp.setBobot3(rs.getString("bobot3"));
             }
         } catch (IOException ex) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);

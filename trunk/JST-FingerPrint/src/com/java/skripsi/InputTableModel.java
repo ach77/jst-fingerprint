@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
 public class InputTableModel extends AbstractTableModel{
 
     int row;
-    String[] column = {"ID", "Nama", "Gambar", "Bobot Input"};
+    String[] column = {"ID", "Nama", "Gambar", "Bobot1","Bobot2","Bobot3"};
     List<FingerPrint> list = new ArrayList<FingerPrint>();
     Object[][] data;
 
@@ -24,7 +24,9 @@ public class InputTableModel extends AbstractTableModel{
             data[i][0] = fp.getId();
             data[i][1] = fp.getNama();
             data[i][2] = fp.getImage();
-            data[i][3] = fp.getBobot();
+            data[i][3] = fp.getBobot1();
+            data[i][4] = fp.getBobot2();
+            data[i][5] = fp.getBobot3();
         }
     }
 

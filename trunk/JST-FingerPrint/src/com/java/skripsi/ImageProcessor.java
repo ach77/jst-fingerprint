@@ -74,7 +74,8 @@ public class ImageProcessor {
             if ((jml0 + jml45 + jml90 + jml45m) == 0) {
                 result = 0;
             } else {
-                result = ((jml0 * 0) + (jml45 * 45) + (jml90 * 90) + (jml45m * -45)) / (jml0 + jml45 + jml90 + jml45m);
+//                result = ((jml0 * 0) + (jml45 * 45) + (jml90 * 90) + (jml45m * -45)) / (jml0 + jml45 + jml90 + jml45m);
+                result = ((jml0 * 0) + (jml45 * 1.57) + (jml90 * 3.14) + (jml45m * -1.57)) / (jml0 + jml45 + jml90 + jml45m);
             }
         } catch (ArithmeticException e) {
             result = 0;
