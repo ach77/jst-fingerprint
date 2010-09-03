@@ -1,0 +1,12 @@
+ami1 => ami2(OK), ami3(OK)
+ana1 => ana2(ani), ana3(mega)
+Ani1 => ani2(OK), ani3(OK)
+candra1 => candra2(ami), candra3(OK)
+leo1 => leo2(winda), leo3(winda)
+mega1 => mega2(winda),mega3(candra)
+melly => melly2(OK), melly3(OK)
+nasir1 => nasir2(winda), nasir3(winda)
+Sevhad1 => tidak terdeteksi
+tris1 => tris2(ani), tris3(ani)
+winda1 => winda2(OK), winda3(OK)
+winny1 => winny2(winda), winny3(OK)

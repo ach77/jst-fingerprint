@@ -1,0 +1,9 @@
+Ami	=> LEO+AMI
+Candra	=> NASIR+CANDRA
+Leo	=> NASIR+LEO
+Mega	=> NASIR+NASIR
+Melly	=> MELLY+MELLY (OK)
+Nasir	=> LEO+LEO 
+Seti	=> SETI+SETI (OK)
+Sevhad	=> SEVHAD+SEVHAD (OK)
+Tris	=> TRIS+TRIS (OK)
