@@ -12,7 +12,7 @@ public class LogForm extends javax.swing.JFrame {
     public LogForm() {
         initComponents();
         log = "";
-        chart = new MseChart();
+        chart = new MseChart();     //bentuk objek chart untuk MSE
     }
 
     /** This method is called from within the constructor to
@@ -100,22 +100,17 @@ public class LogForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btCloseActionPerformed
 
     /**
-     * @param args the command line arguments
+     * menghapus data2 log
      */
-//    public static void main(String args[]) {
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//
-//            public void run() {
-//                new LogForm().setVisible(true);
-//            }
-//        });
-//    }
-
     public void clearLog() {
         log = "";
         this.textLog.setText("");
     }
 
+    /**
+     * mengeset nilai data log
+     * @param aLog
+     */
     public void setLog(LogInterface aLog) {
         if (log.length() == 0) {
             log += aLog.getLog();

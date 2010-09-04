@@ -16,6 +16,7 @@ public class InputTableModel extends AbstractTableModel{
     Object[][] data;
 
     public InputTableModel(List<FingerPrint> aList) {
+        //dapatkan data dari List aList
         list = aList;
         data = new Object[list.size()][column.length];
         FingerPrint fp;

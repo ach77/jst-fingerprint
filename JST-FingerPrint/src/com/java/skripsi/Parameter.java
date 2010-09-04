@@ -3,17 +3,20 @@
  * and open the template in the editor.
  */
 package com.java.skripsi;
-
+/**
+ * Class untuk menangani parameter JST
+ */
 public class Parameter {
 
-    int maxEpoch;
-    double target;
-    double learningRate;
-    int numHiddenLayer;
-    double minRandom;
-    double maxRandom;
+    int maxEpoch;           //jumlah maksimum epoch
+    double target;          //target
+    double learningRate;    //learning rate
+    int numHiddenLayer;     //jumlah hidden layer
+    double minRandom;       //minimum random
+    double maxRandom;       //maksimum random
 
     public Parameter() {
+        //set nilai parameter menjadi default
         setToDefault();
     }
 
@@ -26,6 +29,9 @@ public class Parameter {
         this.maxRandom = maxRandom;
     }
 
+    /**
+     * mengeset nilai parameter menjadi default
+     */
     public void setToDefault() {
         this.maxEpoch = 1000;
         this.target = 0.0001;

@@ -13,6 +13,9 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+/**
+ * Class untuk membentuk char MSE
+ */
 public class MseChart {
 
     private XYDataset dataset;
@@ -32,14 +35,12 @@ public class MseChart {
     }
 
     public XYDataset createDataset() {
-        final XYSeries series2 = new XYSeries("MSE");
-        for (int i = 0; i < datas.length; i++) {
+        final XYSeries series2 = new XYSeries("MSE");       //judul chart
+        for (int i = 0; i < datas.length; i++) {            //data yg ditampilkan
             series2.add((i + 1), datas[i]);
         }
-
         XYSeriesCollection dataSetColl = new XYSeriesCollection();
         dataSetColl.addSeries(series2);
-
         return dataSetColl;
     }
 
@@ -54,10 +55,7 @@ public class MseChart {
                 true, // tooltips
                 false // urls
                 );
-
         chart.setBackgroundPaint(Color.white);
-
         return chart;
-
     }
 }

@@ -16,6 +16,7 @@ public class DataTableModel extends AbstractTableModel {
     DB db;
 
     public DataTableModel(DB db) {
+        //dapatkan data dari database
         this.db = db;
         list = db.getData();
         data = new Object[list.size()][column.length];

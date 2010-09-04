@@ -8,6 +8,9 @@ package com.java.skripsi;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
+/**
+ * Filter untuk image dengan JFileChooser
+ */
 public class ImageFilter extends FileFilter {
 
     @Override
