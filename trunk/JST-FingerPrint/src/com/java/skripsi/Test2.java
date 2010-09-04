@@ -5,26 +5,28 @@
 package com.java.skripsi;
 
 import java.util.Random;
+import misc.NewImageProcessor;
 
 public class Test2 {
 
     Random r = new Random();
     static Test2 test;
     static int pixel[][] = {
-        {1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1},
-        {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0},
-        {1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1},
-        {1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0},
-        {1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0},
-        {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1},
-        {0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1},
-        {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1},
+        {1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1},
+        {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0},
+        {1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0},
+        {1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1},
+        {0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+        {0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0},
         {1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0},
-        {1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1},
-        {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1}};
+        {1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+        //{1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1}};
+    };
 
     public static void main(String[] args) {
-//        ImageProcessor ip = new ImageProcessor();
+        NewImageProcessor ip = new NewImageProcessor();
 //        double[] result = ip.divideImageArray(pixel);
 //        for (int i = 0; i < result.length; i++) {
 //            System.out.println(i + ":" + result[i]);
@@ -42,39 +44,55 @@ public class Test2 {
 //            }
 //        }
 
+//        for (int i = 0; i < pixel.length; i += 2) {
+//            for (int j = 0; j < pixel[0].length; j += 2) {
+//                if(i==10 && j==4){
+//                    System.out.println("debug");
+//                }
+//                boolean status=ip.isHaveNeighbour(pixel, i, j);
+//                System.out.println("ip["+i+"]["+j+"]:"+status);
+//            }
+//        }
 
-        // menandakan 3 input i[0],i[1],i[2]
-        double[][] x = {
-            //            {-10, 3.75f, -17.3f, -15, 15, 7.5f, -11.25f, -13.5f, -5,  -22.5f, -22.5f, 45, 4, -19, 20, 24.29,1.81, -22.5f, 45}
-            //            {-10, 3.75f, -17.3f, -15, 15, 7.5f, -11.25f, -13.5f, -5,  -22.5f, -22.5f, 45, 4, -19, 20, 24.29,1.81, -22.5f, 45}
-            //            {10, 2, 4, -15, 3, 14, -6.4, 0.2, 0.5, 0.6, -19, -18, 13, 14, 15, -14, -12, 14, 19},
-            //            {14, 4, 8, -2, 7, 24, -16.4, 0.8, 0.9, 0.5, -11, -15, 12, 19, 25, -24, -22, 18, -19},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0},
-            {1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1},
-            {0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0}
-        };
-//        };
-        // menandakan 3 target t[0],t[1],t[2] berupa bilangan biner
-        // i[0] punya target t[0], i[1] punya target t[1], i[2] punya target t[2]
-        double[][] target = {
-            {0, 0, 0, 0, 0, 1},
-            {0, 0, 0, 0, 1, 0},
-            {0, 0, 0, 0, 1, 1},
-            {0, 0, 0, 1, 0, 0},
-            {0, 0, 0, 1, 0, 1},};
-        //set parameter
-        JSTEngine engine = new JSTEngine(x, target, 1, 0.01f, 1000, 19, 6, 6, 0, 0.35f);
-        //proses pembelajaran 3 input dan 3 target
-        engine.trainingJST();
-        for (int i = 0; i < x.length; i++) {
-            double[] input = x[i];
-            double[] result = engine.recognizeJST(input);
-            for (int j = 0; j < result.length; j++) {
-                int hasil = result[j] < 0.5 ? 0 : 1;
-            }
+        double[] res = ip.divideImageArray(pixel);
+        for (int i = 0; i < res.length; i++) {
+            double d = res[i];
+            System.out.println("[" + i + "]:" + d);
         }
+
+
+//        // menandakan 3 input i[0],i[1],i[2]
+//        double[][] x = {
+//            //            {-10, 3.75f, -17.3f, -15, 15, 7.5f, -11.25f, -13.5f, -5,  -22.5f, -22.5f, 45, 4, -19, 20, 24.29,1.81, -22.5f, 45}
+//            //            {-10, 3.75f, -17.3f, -15, 15, 7.5f, -11.25f, -13.5f, -5,  -22.5f, -22.5f, 45, 4, -19, 20, 24.29,1.81, -22.5f, 45}
+//            //            {10, 2, 4, -15, 3, 14, -6.4, 0.2, 0.5, 0.6, -19, -18, 13, 14, 15, -14, -12, 14, 19},
+//            //            {14, 4, 8, -2, 7, 24, -16.4, 0.8, 0.9, 0.5, -11, -15, 12, 19, 25, -24, -22, 18, -19},
+//            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
+//            {1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0},
+//            {1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1},
+//            {1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1},
+//            {0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0}
+//        };
+////        };
+//        // menandakan 3 target t[0],t[1],t[2] berupa bilangan biner
+//        // i[0] punya target t[0], i[1] punya target t[1], i[2] punya target t[2]
+//        double[][] target = {
+//            {0, 0, 0, 0, 0, 1},
+//            {0, 0, 0, 0, 1, 0},
+//            {0, 0, 0, 0, 1, 1},
+//            {0, 0, 0, 1, 0, 0},
+//            {0, 0, 0, 1, 0, 1},};
+//        //set parameter
+//        JSTEngine engine = new JSTEngine(x, target, 1, 0.01f, 1000, 19, 6, 6, 0, 0.35f);
+//        //proses pembelajaran 3 input dan 3 target
+//        engine.trainingJST();
+//        for (int i = 0; i < x.length; i++) {
+//            double[] input = x[i];
+//            double[] result = engine.recognizeJST(input);
+//            for (int j = 0; j < result.length; j++) {
+//                int hasil = result[j] < 0.5 ? 0 : 1;
+//            }
+//        }
 
 
 
