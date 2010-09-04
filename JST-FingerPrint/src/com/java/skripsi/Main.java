@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import misc.NewFuzzy;
+import misc.NewImageProcessor;
 import misc.NewThreshold;
 
 public class Main extends javax.swing.JFrame {
@@ -33,7 +34,7 @@ public class Main extends javax.swing.JFrame {
     public static final String DELIMITER = ":";
     private DB db;
     private JSTEngine jstEngine;
-    private ImageProcessor imageProcessor;
+    private NewImageProcessor imageProcessor;
     private File[] fileTmp = {null, null, null};
     private DataTableModel dtm;
     private InputTableModel itm;
@@ -57,7 +58,7 @@ public class Main extends javax.swing.JFrame {
 
         param = new Parameter();
         jstEngine = new JSTEngine();
-        imageProcessor = new ImageProcessor();
+        imageProcessor = new NewImageProcessor();
         frmLog = new LogForm();
         frmLog.clearLog();
 
@@ -72,6 +73,60 @@ public class Main extends javax.swing.JFrame {
         //konfigurasi panel tes
         txtTesTarget.setColumns(6);
         btnClearTes.setEnabled(false);
+
+    }
+
+    public void debug() {
+        //debug
+        String[] filename = {
+            "ami1.jpg", "ana1.jpg", "ani1.jpg", "candra1.jpg",
+            "leo1.jpg", "mega1.jpg", "melly1.jpg", "nasir1.jpg",
+            "seti1.jpg", "sevhad1.jpg", "tris1.jpg", "winda1.jpg",
+            "winny1.jpg"};
+        File[] arrFile = new File[13];
+        for (int i = 0; i < arrFile.length; i++) {
+            arrFile[i] = new File("images/" + filename[i]);
+            System.out.println(i + ":" + arrFile[i].exists());
+        }
+
+
+        for (int i = 0; i < arrFile.length; i++) {
+            String[] arrBobot = new String[3];
+            BufferedImage bi = null;
+            try {
+                bi = ImageIO.read(arrFile[i]);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            NewFuzzy nf = new NewFuzzy(bi);
+            //threshold
+            NewThreshold thresholder = new NewThreshold(nf.getResult());
+            //thinning
+            Thinner thinner = new Thinner(thresholder.getResult());
+            //jadikan gambar menjadi grayscale
+            int[][] data = ImageUtil.ImageToBiner(thinner.getResult());
+            // potong2 gambar menjadi 19 bagian
+            double[] tmpX = imageProcessor.divideImageArray(data);
+            arrBobot[0] = "";
+            arrBobot[1] = "";
+            arrBobot[2] = "";
+            //set input string dg format input[0]:input[1]:dst...
+            Converter.setFraction(2);
+            for (int j = 0; j < tmpX.length; j++) {
+//                arrBobot[0] += j != tmpX.length - 1 ? Converter.formatString(tmpX[j]) + DELIMITER : Converter.formatString(tmpX[j]);
+                int hasil = tmpX[j] < 0.5 ? 0 : 1;
+                arrBobot[0] += j != tmpX.length - 1 ? hasil + DELIMITER : hasil;
+            }
+            int newId = counterId == 0 ? db.getNewId() : (db.getNewId() + counterId);
+            FingerPrint fp = new FingerPrint();
+            fp.setId(newId);
+            fp.setNama(filename[i].replace("1.jpg", ""));
+            fp.setImage(ImageUtil.fileToByteArray(arrFile[i]));
+            fp.setBobots(arrBobot);
+            listInput.add(fp);
+            refreshTableInput();
+            counterId++;
+        }
     }
 
     public void setParameter(Parameter param) {
@@ -108,6 +163,7 @@ public class Main extends javax.swing.JFrame {
         txtMinRandom = new javax.swing.JTextField();
         txtMaxRandom = new javax.swing.JTextField();
         cbDefaultParam = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         txtBrowseImage = new javax.swing.JTextField();
         btRemove = new javax.swing.JButton();
@@ -282,6 +338,13 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -307,7 +370,9 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(txtLR, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                         .addComponent(txtTargetError, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                         .addComponent(txtMaxEpoch, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)))
-                .addGap(232, 232, 232))
+                .addGap(75, 75, 75)
+                .addComponent(jButton1)
+                .addGap(84, 84, 84))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,7 +381,8 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMaxEpoch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTargetError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -590,7 +656,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDatabaseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnDataHapus)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pnlDatabaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -622,7 +688,7 @@ public class Main extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1428,7 +1494,7 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1442,7 +1508,7 @@ public class Main extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Image Databases");
@@ -1501,8 +1567,6 @@ public class Main extends javax.swing.JFrame {
         boolean isMatch = false;
         FingerPrint fp = null;
         this.txtHasilRecognition.setText("");
-//        Image image = ((ImagePanel) pnlGambarInput).getImage();
-//        BufferedImage bi = ImageUtil.ImageToBufferedImage(image, this);
         BufferedImage bi = null;
         try {
             bi = ImageIO.read(fileTmp2);
@@ -1525,6 +1589,7 @@ public class Main extends javax.swing.JFrame {
         double[] input = imageProcessor.divideImageArray(data);
         Converter.setFraction(2);
         for (int i = 0; i < input.length; i++) {
+//            input[i] = input[i] < 0.5 ? 0 : 1;
             input[i] = Double.parseDouble(Converter.formatString(input[i]));
         }
 
@@ -1533,11 +1598,9 @@ public class Main extends javax.swing.JFrame {
         for (int i = 0; i < list.size(); i++) {
             fp = list.get(i);
             double[] target = Converter.stringToArrayDouble(Converter.decimalToBinary(fp.getId(), 6));
-
             jstEngine.setBobotRecognize(db.getBobot(), DELIMITER, 19, 6);
             double[] hasil = jstEngine.recognizeJST(input);
-            //tulis report proses
-            txtHasilRecognition.setText(txtHasilRecognition.getText() + jstEngine.getLog());
+
             // bulatkan nilai ke atas/ke bawah
             hasil = jstEngine.round(hasil);
             if (jstEngine.match(target, hasil)) {
@@ -1546,14 +1609,19 @@ public class Main extends javax.swing.JFrame {
             }
         }
         if (isMatch) {
+            //tulis report proses
+            txtHasilRecognition.setText(txtHasilRecognition.getText() + jstEngine.getLog());
             txtHasilRecognition.setText(txtHasilRecognition.getText()
                     + "\nSidik jari teridentifikasi sebagai:"
                     + "\n-ID:" + fp.getId() + "\n-Nama:" + fp.getNama());
             showAlert("Sidik jari teridentifikasi", JOptionPane.INFORMATION_MESSAGE);
         } else {
+            //tulis report proses
+            txtHasilRecognition.setText(txtHasilRecognition.getText() + jstEngine.getLog());
             txtHasilRecognition.setText(txtHasilRecognition.getText() + "\nSidik jari tidak teridentifikasi");
             showAlert("Sidik jari tidak teridentifikasi", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_btnRecognizeActionPerformed
 
     private void btnBrowseTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseTestActionPerformed
@@ -1718,18 +1786,8 @@ public class Main extends javax.swing.JFrame {
         jfc.showOpenDialog(this);
 
         if (jfc.getSelectedFile() != null) {
-//            if (jfc.getSelectedFiles().length == 1) {
-                txtBrowseImage.setText(jfc.getSelectedFile().getAbsolutePath());
-                fileTmp[0] = jfc.getSelectedFile();
-//            } else if (jfc.getSelectedFiles().length == 3) {
-//                File[] files = jfc.getSelectedFiles();
-//                txtBrowseImage.setText(files[0].getAbsolutePath());
-//                txtBrowseImage2.setText(files[1].getAbsolutePath());
-//                txtBrowseImage3.setText(files[2].getAbsolutePath());
-//                fileTmp[0] = files[0];
-//                fileTmp[1] = files[1];
-//                fileTmp[2] = files[2];
-//            }
+            txtBrowseImage.setText(jfc.getSelectedFile().getAbsolutePath());
+            fileTmp[0] = jfc.getSelectedFile();
         }
     }//GEN-LAST:event_btBrowseActionPerformed
 
@@ -1753,7 +1811,7 @@ public class Main extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                    NewFuzzy nf = new NewFuzzy(bi);                    
+                    NewFuzzy nf = new NewFuzzy(bi);
 
                     //threshold
                     NewThreshold thresholder = new NewThreshold(nf.getResult());
@@ -1875,16 +1933,16 @@ public class Main extends javax.swing.JFrame {
         }
 
 
-//        for (int i = 0; i < xInput.length; i++) {
-//            System.out.println("");
-//            System.out.print(i + ":");
-//            double[] result = jstEngine.recognizeJST(xInput[i]);
-//            for (int j = 0; j < result.length; j++) {
-//                int a = result[j] > 0.5 ? 1 : 0;
-//                System.out.print(a + " ");
-//            }
+        for (int i = 0; i < xInput.length; i++) {
+            System.out.println("");
+            System.out.print(i + ":");
+            double[] result = jstEngine.recognizeJST(xInput[i]);
+            for (int j = 0; j < result.length; j++) {
+                int a = result[j] > 0.5 ? 1 : 0;
+                System.out.print(a + " ");
+            }
 //            System.out.println("detail:" + jstEngine.getLog());
-//        }
+        }
     }//GEN-LAST:event_btTrainingActionPerformed
 
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
@@ -2025,6 +2083,10 @@ public class Main extends javax.swing.JFrame {
             fileTmp[2] = jfc.getSelectedFile();
         }
     }//GEN-LAST:event_btBrowse3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        debug();
+    }//GEN-LAST:event_jButton1ActionPerformed
     public void showAlert(String message, int type) {
         JOptionPane.showMessageDialog(this, message, "Info", JOptionPane.WARNING_MESSAGE);
     }
@@ -2067,6 +2129,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnRecognize;
     private javax.swing.JButton btnTesTraining;
     private javax.swing.JCheckBox cbDefaultParam;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

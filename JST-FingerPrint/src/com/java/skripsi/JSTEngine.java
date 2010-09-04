@@ -165,6 +165,7 @@ public class JSTEngine implements LogInterface {
 //                    error += Math.pow(tTemp[i] - y[i], 2);    //0.5 = degree of freedom for error
                 }
                 mse = error;
+//                mse = error/jmlOutput;
 
                 // hitung gammaOut
                 for (int i = 0; i < jmlOutput; i++) {
