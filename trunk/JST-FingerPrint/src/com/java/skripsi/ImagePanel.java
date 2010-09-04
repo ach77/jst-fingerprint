@@ -7,7 +7,9 @@ package com.java.skripsi;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.JPanel;
-
+/**
+ * membuat panel untuk image
+ */
 public class ImagePanel extends JPanel {
 
     Image image;

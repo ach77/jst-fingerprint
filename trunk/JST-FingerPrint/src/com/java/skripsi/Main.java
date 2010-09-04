@@ -25,110 +25,54 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import misc.NewFuzzy;
-import misc.NewImageProcessor;
+import misc.ImageProcessor;
 import misc.NewThreshold;
 
 public class Main extends javax.swing.JFrame {
 
     /** Creates new form Main */
-    public static final String DELIMITER = ":";
-    private DB db;
+    public static final String DELIMITER = ":";     //delimiter untuk pemisah nilai input -> 3.4:6.4:2
+    private DB db;                                  //objek akses database
     private JSTEngine jstEngine;
-    private NewImageProcessor imageProcessor;
-    private File[] fileTmp = {null, null, null};
-    private DataTableModel dtm;
-    private InputTableModel itm;
-    private Parameter param;
-    private LogForm frmLog;
-    private int counterId = 0;
-    List<FingerPrint> listInput;
+    private ImageProcessor imageProcessor;          //objek untuk memecah gambar dan mengambil nilai derajat rata2
+    private File[] fileTmp = {null, null, null};    //file temporary untuk image 1 hingga image 3
+    private DataTableModel dtm;                     //tabel model data fingerprint di database
+    private InputTableModel itm;                    //tabel model data fingerprint yg akan ditraining
+    private Parameter param;                        //parameter JST
+    private LogForm frmLog;                         //form untuk menampilkan log proses JST yg terjadi
+    private int counterId = 0;                      //index id file yg akan ditraining
+    List<FingerPrint> listInput;                    //list dari objek fingerprint yg akan di training
+    private File fileTmpSelected;                   //file temporary image yg diseleksi melalui JFileChooser
 
     public Main() {
-        //database
-        db = new DB();
-        //tabel model
+        db = new DB();                              //database
         listInput = new ArrayList<FingerPrint>();
-        dtm = new DataTableModel(db);
+        dtm = new DataTableModel(db);               //inisialisasi tabel model
         itm = new InputTableModel(listInput);
-
         initComponents();
         setLocationRelativeTo(null);
-        tblData.setModel(dtm);
+        tblData.setModel(dtm);                      //set tabel model
         tblInput.setModel(itm);
-
         param = new Parameter();
         jstEngine = new JSTEngine();
-        imageProcessor = new NewImageProcessor();
+        imageProcessor = new ImageProcessor();
         frmLog = new LogForm();
-        frmLog.clearLog();
+        frmLog.clearLog();                          //mengosongkan form untuk log
 
         //konfigurasi panel database
-        this.txtBobotAkhir.setText(db.getBobot());
-
+        this.txtBobotAkhir.setText(db.getBobot());  //ambil bobot akhir dari database
         //konfigurasi panel input
-        setParameter(param);
+        setParameter(param);                        //set parameter default untuk training JST
         btSave.setEnabled(false);
         btBatal.setEnabled(false);
-
         //konfigurasi panel tes
-        txtTesTarget.setColumns(6);
         btnClearTes.setEnabled(false);
-
     }
 
-    public void debug() {
-        //debug
-        String[] filename = {
-            "ami1.jpg", "ana1.jpg", "ani1.jpg", "candra1.jpg",
-            "leo1.jpg", "mega1.jpg", "melly1.jpg", "nasir1.jpg",
-            "seti1.jpg", "sevhad1.jpg", "tris1.jpg", "winda1.jpg",
-            "winny1.jpg"};
-        File[] arrFile = new File[13];
-        for (int i = 0; i < arrFile.length; i++) {
-            arrFile[i] = new File("images/" + filename[i]);
-            System.out.println(i + ":" + arrFile[i].exists());
-        }
-
-
-        for (int i = 0; i < arrFile.length; i++) {
-            String[] arrBobot = new String[3];
-            BufferedImage bi = null;
-            try {
-                bi = ImageIO.read(arrFile[i]);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            NewFuzzy nf = new NewFuzzy(bi);
-            //threshold
-            NewThreshold thresholder = new NewThreshold(nf.getResult());
-            //thinning
-            Thinner thinner = new Thinner(thresholder.getResult());
-            //jadikan gambar menjadi grayscale
-            int[][] data = ImageUtil.ImageToBiner(thinner.getResult());
-            // potong2 gambar menjadi 19 bagian
-            double[] tmpX = imageProcessor.divideImageArray(data);
-            arrBobot[0] = "";
-            arrBobot[1] = "";
-            arrBobot[2] = "";
-            //set input string dg format input[0]:input[1]:dst...
-            Converter.setFraction(2);
-            for (int j = 0; j < tmpX.length; j++) {
-//                arrBobot[0] += j != tmpX.length - 1 ? Converter.formatString(tmpX[j]) + DELIMITER : Converter.formatString(tmpX[j]);
-                int hasil = tmpX[j] < 0.5 ? 0 : 1;
-                arrBobot[0] += j != tmpX.length - 1 ? hasil + DELIMITER : hasil;
-            }
-            int newId = counterId == 0 ? db.getNewId() : (db.getNewId() + counterId);
-            FingerPrint fp = new FingerPrint();
-            fp.setId(newId);
-            fp.setNama(filename[i].replace("1.jpg", ""));
-            fp.setImage(ImageUtil.fileToByteArray(arrFile[i]));
-            fp.setBobots(arrBobot);
-            listInput.add(fp);
-            refreshTableInput();
-            counterId++;
-        }
-    }
-
+    /**
+     * fungsi yg digunakan untuk mengeset parameter2 JST
+     * @param param
+     */
     public void setParameter(Parameter param) {
         this.txtMaxEpoch.setText(String.valueOf(param.getMaxEpoch()));
         this.txtTargetError.setText(String.valueOf(param.getTarget()));
@@ -163,7 +107,6 @@ public class Main extends javax.swing.JFrame {
         txtMinRandom = new javax.swing.JTextField();
         txtMaxRandom = new javax.swing.JTextField();
         cbDefaultParam = new javax.swing.JCheckBox();
-        jButton1 = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         txtBrowseImage = new javax.swing.JTextField();
         btRemove = new javax.swing.JButton();
@@ -260,12 +203,6 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JST-Fuzzy FingerPrint");
 
-        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTabbedPane1MouseClicked(evt);
-            }
-        });
-
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Konfigurasi Paramter"));
 
         jLabel4.setText("Maksimum Epoch");
@@ -286,11 +223,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        txtTargetError.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTargetErrorActionPerformed(evt);
-            }
-        });
         txtTargetError.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtTargetErrorFocusLost(evt);
@@ -315,11 +247,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        txtMaxRandom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMaxRandomActionPerformed(evt);
-            }
-        });
         txtMaxRandom.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtMaxRandomFocusLost(evt);
@@ -330,18 +257,6 @@ public class Main extends javax.swing.JFrame {
         cbDefaultParam.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 cbDefaultParamStateChanged(evt);
-            }
-        });
-        cbDefaultParam.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbDefaultParamActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
             }
         });
 
@@ -370,9 +285,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(txtLR, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                         .addComponent(txtTargetError, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                         .addComponent(txtMaxEpoch, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)))
-                .addGap(75, 75, 75)
-                .addComponent(jButton1)
-                .addGap(84, 84, 84))
+                .addGap(232, 232, 232))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -381,8 +294,7 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMaxEpoch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jButton1))
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTargetError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -592,7 +504,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Input & Parameter", pnlInput);
@@ -625,11 +537,6 @@ public class Main extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
-            }
-        });
-        tblData.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblDataMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblData);
@@ -1508,7 +1415,7 @@ public class Main extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Image Databases");
@@ -1516,6 +1423,10 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Action untuk memilih gambar yg digunakan sebagai input training JST
+     * @param evt
+     */
     private void btnBrowseInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseInputActionPerformed
         JFileChooser jfc = new JFileChooser(new File("images"));
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -1523,7 +1434,7 @@ public class Main extends javax.swing.JFrame {
 
         try {
             if (jfc.getSelectedFile() != null) {
-                fileTmp2 = jfc.getSelectedFile();
+                fileTmpSelected = jfc.getSelectedFile();
                 txtGambarInput.setText(jfc.getSelectedFile().getAbsolutePath());
                 Image image = Toolkit.getDefaultToolkit().getImage(jfc.getSelectedFile().toURI().toURL());
                 ((ImagePanel) pnlGambarInput).setImage(image);
@@ -1531,18 +1442,27 @@ public class Main extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_btnBrowseInputActionPerformed
-    private File fileTmp2;
 
+    /**
+     * gambar ulang tabel yg berisi data2 fingerprint
+     */
     private void refreshTableData() {
         dtm = new DataTableModel(db);
         this.tblData.setModel(dtm);
     }
 
+    /**
+     * gambar ulang tabel yg berisi input gambar fingerprint yg akan ditraining
+     */
     private void refreshTableInput() {
         itm = new InputTableModel(listInput);
         this.tblInput.setModel(itm);
     }
 
+    /**
+     * action untuk menghapus data dari list gambar yang akan ditraining
+     * @param evt
+     */
     private void btnDataHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataHapusActionPerformed
         if (tblData.getSelectedRow() != -1) {
             int[] idxs = tblData.getSelectedRows();
@@ -1556,74 +1476,72 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDataHapusActionPerformed
 
-    private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
-    }//GEN-LAST:event_tblDataMouseClicked
-
+    /**
+     * action untuk recognize image.
+     * @param evt
+     */
     private void btnRecognizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecognizeActionPerformed
         if (((ImagePanel) pnlGambarInput).getImage() == null || this.txtGambarInput.getText().trim().isEmpty()) {
+            //jika image tidak ada dan nama file kosong
             showAlert("Inputan tidak valid", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        boolean isMatch = false;
-        FingerPrint fp = null;
+        boolean isMatch = false;                //flag untuk mengetahui apakah gambar sudah cocok dengan yg ada di database
+        FingerPrint fp = null;                  //objek fingerprint
         this.txtHasilRecognition.setText("");
         BufferedImage bi = null;
         try {
-            bi = ImageIO.read(fileTmp2);
+            bi = ImageIO.read(fileTmpSelected); //baca file image yg terseleksi
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         //fuzzy enhancement
         NewFuzzy nf = new NewFuzzy(bi);
-
         //threshold
         NewThreshold thresholder = new NewThreshold(nf.getResult());
-
         //thinning
         Thinner thinner = new Thinner(thresholder.getResult());
-
-        //jadikan gambar menjadi grayscale
+        //jadikan image menjadi grayscale
         int[][] data = ImageUtil.ImageToBiner(thinner.getResult());
-
-        //slice menjadi 19 bagian
+        //potong2 image menjadi 19 bagian
         double[] input = imageProcessor.divideImageArray(data);
-        Converter.setFraction(2);
+        Converter.setFraction(2);       // set nilai pecahan 2 dibelakang koma
         for (int i = 0; i < input.length; i++) {
-//            input[i] = input[i] < 0.5 ? 0 : 1;
             input[i] = Double.parseDouble(Converter.formatString(input[i]));
         }
 
-        //menghitung satu per satu kecocokan sidik jari dengan data di database
-        ArrayList<FingerPrint> list = db.getData();
+        //memproses satu per satu kecocokan sidik jari dengan data di database
+        ArrayList<FingerPrint> list = db.getData();                         //ambil data fingerprint dari database
         for (int i = 0; i < list.size(); i++) {
             fp = list.get(i);
             double[] target = Converter.stringToArrayDouble(Converter.decimalToBinary(fp.getId(), 6));
-            jstEngine.setBobotRecognize(db.getBobot(), DELIMITER, 19, 6);
-            double[] hasil = jstEngine.recognizeJST(input);
-
-            // bulatkan nilai ke atas/ke bawah
-            hasil = jstEngine.round(hasil);
-            if (jstEngine.match(target, hasil)) {
+            jstEngine.setBobotRecognize(db.getBobot(), DELIMITER, 19, 6);   //set parameter inputan untuk recognize JST
+            double[] hasil = jstEngine.recognizeJST(input);                 //lakukan recognize pada image, hasil akan berupa bilangan biner dalam bentuk string
+            hasil = jstEngine.round(hasil);                                 //bulatkan nilai ke atas/ke bawah <0.5->0 >0.5->1
+            if (jstEngine.match(target, hasil)) {                           //jika nilai output cocok dengan salah satu data yg ada di database
                 isMatch = true;
-                break;
+                break;                                                      //hentikan perulangan pencocokan image dengan data di database
             }
         }
-        if (isMatch) {
-            //tulis report proses
+        if (isMatch) {  //jika ada image yg cocok di database
+            //tulis log proses recognize
             txtHasilRecognition.setText(txtHasilRecognition.getText() + jstEngine.getLog());
             txtHasilRecognition.setText(txtHasilRecognition.getText()
                     + "\nSidik jari teridentifikasi sebagai:"
                     + "\n-ID:" + fp.getId() + "\n-Nama:" + fp.getNama());
             showAlert("Sidik jari teridentifikasi", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            //tulis report proses
+        } else {    //jika tidak ada image yg cocok di database
+            //tulis log proses recognize
             txtHasilRecognition.setText(txtHasilRecognition.getText() + jstEngine.getLog());
             txtHasilRecognition.setText(txtHasilRecognition.getText() + "\nSidik jari tidak teridentifikasi");
             showAlert("Sidik jari tidak teridentifikasi", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_btnRecognizeActionPerformed
 
+    /**
+     * Action untuk memilih gambar yg digunakan sebagai test JST
+     * @param evt
+     */
     private void btnBrowseTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseTestActionPerformed
         JFileChooser jfc = new JFileChooser(new File("images"));
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -1639,8 +1557,13 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBrowseTestActionPerformed
 
+    /**
+     * Action untuk tes training JST
+     * @param evt
+     */
     private void btnTesTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesTrainingActionPerformed
         if (((ImagePanel) pnlTesOri).getImage() != null && this.txtTesTarget.getText().length() != 6) {
+            //jika image kosong dan nama file tidak ada
             showAlert("Input tidak valid", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -1649,26 +1572,20 @@ public class Main extends javax.swing.JFrame {
         //ambil image dan ubah ke BufferedImage dari file yg diseleksi
         Image imgTes = ((ImagePanel) pnlTesOri).getImage();
         BufferedImage bis = ImageUtil.ImageToBufferedImage(imgTes, this);
-
         //fuzzy enhancement
         NewFuzzy nf = new NewFuzzy(bis);
         ((ImagePanel) pnlTesFuzzy).setImage(nf.getResult());
-
         //threshold
         NewThreshold thresholder = new NewThreshold(nf.getResult());
         ((ImagePanel) pnlTesThreshold).setImage(thresholder.getResult());
-
         //thinning
         Thinner thinner = new Thinner(thresholder.getResult());
         ((ImagePanel) pnlTesThinning).setImage(thinner.getResult());
-
-        //jadikan gambar menjadi grayscale
+        //jadikan image menjadi grayscale
         int[][] data = ImageUtil.ImageToBiner(thinner.getResult());
-
-        //slice menjadi 19 bagian
+        //pecah image menjadi 19 bagian
         double[] input = imageProcessor.divideImageArray(data);
-
-        //gambar potongan gambar ke tiap2 panel image
+        //draw potongan image ke tiap2 panel image
         ArrayList<int[][]> listArrImg = imageProcessor.getListArrayImage();
         BufferedImage[] biSliceImg = new BufferedImage[listArrImg.size()];
         for (int i = 0; i < listArrImg.size(); i++) {
@@ -1694,11 +1611,11 @@ public class Main extends javax.swing.JFrame {
         ((ImagePanel) pnlSlice18).setImage(biSliceImg[17]);
         ((ImagePanel) pnlSlice19).setImage(biSliceImg[18]);
 
-        //ubah input menjadi array 2 dimensi -> cocok untuk kebutuhan sistem
+        //ubah input menjadi array 2 dimensi supaya cocok untuk kebutuhan sistem
         double[][] inputs = {input};
         //konversi target dari string menjadi array double
         double[] target = Converter.stringToArrayDouble(this.txtTesTarget.getText().trim());
-        //ubah target menjadi array 2 dimensi -> cocok untuk kebutuhan sistem
+        //ubah target menjadi array 2 dimensi supaya cocok untuk kebutuhan sistem
         double[][] targets = {target};
 
         jstEngine.setParameter(
@@ -1712,12 +1629,17 @@ public class Main extends javax.swing.JFrame {
                 6, // jml output
                 Double.parseDouble(this.txtMinRandom.getText()), // min random
                 Double.parseDouble(this.txtMaxRandom.getText()));       //max random
-        jstEngine.trainingJST();
-        frmLog.setLog(jstEngine);
+        jstEngine.trainingJST();    //proses training JST
+        frmLog.setLog(jstEngine);   //ciptakan log proses training JST
         frmLog.setVisible(true);
         this.btnClearTes.setEnabled(true);
     }//GEN-LAST:event_btnTesTrainingActionPerformed
 
+    /**
+     * Action untuk membersihkan data pengetesan JST. akan menghapus textfield dan
+     * panel image dari data sebelumnya
+     * @param evt
+     */
     private void btnClearTesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearTesActionPerformed
         this.txtTesBrowse.setText("");
         this.txtTesTarget.setText("");
@@ -1746,17 +1668,6 @@ public class Main extends javax.swing.JFrame {
         ((ImagePanel) pnlSlice19).setImage(null);
         this.btnClearTes.setEnabled(false);
     }//GEN-LAST:event_btnClearTesActionPerformed
-
-    private void txtTargetErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTargetErrorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTargetErrorActionPerformed
-
-    private void txtMaxRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaxRandomActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMaxRandomActionPerformed
-
-    private void cbDefaultParamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDefaultParamActionPerformed
-    }//GEN-LAST:event_cbDefaultParamActionPerformed
 
     /**
      * check box untuk mengeset default parameter
@@ -1792,18 +1703,20 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btBrowseActionPerformed
 
     /**
-     * tambah gambar ke dalam listFileTmp
+     * Action untuk memasukkan image yg akan ditraining
      * @param evt
      */
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
         if (fileTmp == null || this.txtBrowseImage.getText().isEmpty()) {
+            //jika image kosong atau nama file tidak ada
             showAlert("Image harus tersedia", JOptionPane.WARNING_MESSAGE);
         } else if (this.txtNama.getText().isEmpty()) {
+            //jika nama kosong
             showAlert("Nama harus diisi", JOptionPane.WARNING_MESSAGE);
         } else {
-            // ambil data gambar
-            String[] arrBobot = new String[3];
+            String[] arrInput = new String[3];          //file untuk menampung input 1 hingga 3
             for (int i = 0; i < fileTmp.length; i++) {
+                // ambil data gambar
                 if (fileTmp[i] != null) {
                     BufferedImage bi = null;
                     try {
@@ -1811,39 +1724,40 @@ public class Main extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
+                    //image enhancement
                     NewFuzzy nf = new NewFuzzy(bi);
-
                     //threshold
                     NewThreshold thresholder = new NewThreshold(nf.getResult());
-
                     //thinning
                     Thinner thinner = new Thinner(thresholder.getResult());
-
-                    //jadikan gambar menjadi grayscale
+                    //jadikan image menjadi grayscale
                     int[][] data = ImageUtil.ImageToBiner(thinner.getResult());
-
-                    // potong2 gambar menjadi 19 bagian
+                    //pecah image menjadi 19 bagian, digunakan sebagai inputan JST
                     double[] tmpX = imageProcessor.divideImageArray(data);
-                    arrBobot[i] = "";
+                    arrInput[i] = "";
                     //set input string dg format input[0]:input[1]:dst...
                     Converter.setFraction(2);
                     for (int j = 0; j < tmpX.length; j++) {
-                        arrBobot[i] += j != tmpX.length - 1 ? Converter.formatString(tmpX[j]) + DELIMITER : Converter.formatString(tmpX[j]);
-//                int hasil = tmpX[j] < 0.5 ? 0 : 1;
-//                strInput += j != tmpX.length - 1 ? hasil + DELIMITER : hasil;
+                        arrInput[i] += j != tmpX.length - 1 ? Converter.formatString(tmpX[j]) + DELIMITER : Converter.formatString(tmpX[j]);
                     }
                 }
             }
+            //dapatkan id terbaru dari database
             int newId = counterId == 0 ? db.getNewId() : (db.getNewId() + counterId);
+            //set objek fingerprint
             FingerPrint fp = new FingerPrint();
             fp.setId(newId);
             fp.setNama(this.txtNama.getText().trim());
             fp.setImage(ImageUtil.fileToByteArray(fileTmp[0]));
-            fp.setBobots(arrBobot);
+            fp.setBobots(arrInput);
+            //tambahkan tiap objek fingerprint ke dalam listInput
             listInput.add(fp);
+            //draw ulang tabel input
             refreshTableInput();
+            //increment id fingerprint baru
             counterId++;
 
+            //kosongkan textfield dan file temporary image
             this.txtBrowseImage.setText("");
             this.txtBrowseImage2.setText("");
             this.txtBrowseImage3.setText("");
@@ -1855,7 +1769,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btAddActionPerformed
 
     /**
-     * hapus gambar dari listFileTmp
+     * hapus image dari list gambar yg akan ditraining
      * @param evt
      */
     private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
@@ -1867,11 +1781,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btRemoveActionPerformed
 
     /**
-     * tahap pelatihan jst. memasukkan gambar sebagai training set dan menghasilkan bobot.
+     * tahap pelatihan JST memasukkan gambar sebagai training set dan menghasilkan bobot.
      * @param evt
      */
     private void btTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTrainingActionPerformed
         if (listInput.size() <= 0) {
+            //jika tidak ada isi di list inputan
             showAlert("Inputan tidak valid\nTambahkan data terlebih dahulu", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -1880,14 +1795,14 @@ public class Main extends javax.swing.JFrame {
         //tentukan jumlah learning set
         int jmlLearningSet = 0;
         FingerPrint fp;
+        //hitung jumlah input yg akan ditraining dari bobot1,bobot2,bobot3 yg berisi image
         for (int i = 0; i < listInput.size(); i++) {
             fp = listInput.get(i);
             jmlLearningSet += fp.getNumBobots();
         }
-
         //proses persiapan input dan target
-        double[][] target = new double[jmlLearningSet][6];
-        double[][] xInput = new double[jmlLearningSet][19];
+        double[][] target = new double[jmlLearningSet][6];  //target
+        double[][] xInput = new double[jmlLearningSet][19]; //input
         double[] xTemp;
         int idxLearningSet = 0;
         if (jmlLearningSet > 0) {
@@ -1910,7 +1825,6 @@ public class Main extends javax.swing.JFrame {
                     idxLearningSet++;
                 }
             }
-
             //lakukan training berdasar parameter, input dan target yg telah dihitung sebelumnya
             jstEngine.setParameter(
                     xInput, // data input
@@ -1923,48 +1837,53 @@ public class Main extends javax.swing.JFrame {
                     6, // jml output
                     Float.parseFloat(this.txtMinRandom.getText()), // min random
                     Float.parseFloat(this.txtMaxRandom.getText()));       //max random
+            //proses training JST
             jstEngine.trainingJST();
+            //isi informasi ke form log dan munculkan
             frmLog.setLog(jstEngine);
             frmLog.setVisible(true);
+            //set button
             this.btAdd.setEnabled(false);
             this.btRemove.setEnabled(false);
             this.btSave.setEnabled(true);
             this.btBatal.setEnabled(true);
         }
-
-
-        for (int i = 0; i < xInput.length; i++) {
-            System.out.println("");
-            System.out.print(i + ":");
-            double[] result = jstEngine.recognizeJST(xInput[i]);
-            for (int j = 0; j < result.length; j++) {
-                int a = result[j] > 0.5 ? 1 : 0;
-                System.out.print(a + " ");
-            }
-//            System.out.println("detail:" + jstEngine.getLog());
-        }
     }//GEN-LAST:event_btTrainingActionPerformed
 
+    /**
+     * Action untuk menyimpan data image yg telah diinput beserta bobot akhir
+     * hasil perhitungan dari JST
+     * @param evt
+     */
     private void btSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveActionPerformed
+        //masukkan data image input ke dalam database
         FingerPrint fp;
         for (int i = 0; i < listInput.size(); i++) {
             fp = listInput.get(i);
             db.insertData(fp);
         }
+        //update bobot akhir ke database
         db.updateBobotData(jstEngine.getBobot(DELIMITER));
+        //hapus list image input
         for (int i = listInput.size() - 1; i >= 0; i--) {
             listInput.remove(i);
         }
+        //set textfield dan button
         this.txtNama.setText("");
         this.btAdd.setEnabled(true);
         this.btRemove.setEnabled(true);
         this.btSave.setEnabled(false);
         this.btBatal.setEnabled(false);
         this.txtBobotAkhir.setText(jstEngine.getBobot(DELIMITER));
+        //draw ulang tabel input image
         refreshTableInput();
         counterId = 0;
     }//GEN-LAST:event_btSaveActionPerformed
 
+    /**
+     * validasi textfield maxEpoch
+     * @param evt
+     */
     private void txtMaxEpochFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxEpochFocusLost
         if (this.txtMaxEpoch.getText().isEmpty()) {
             showAlert("Maksimum Epoch harus diisi", JOptionPane.WARNING_MESSAGE);
@@ -1975,6 +1894,9 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtMaxEpochFocusLost
 
+    /**
+     * validasi textfield target error
+     */
     private void txtTargetErrorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTargetErrorFocusLost
         if (this.txtTargetError.getText().isEmpty()) {
             showAlert("Target Error harus diisi", JOptionPane.WARNING_MESSAGE);
@@ -1985,6 +1907,10 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtTargetErrorFocusLost
 
+    /**
+     * validasi textfield learning rate
+     * @param evt
+     */
     private void txtLRFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLRFocusLost
         if (this.txtLR.getText().isEmpty()) {
             showAlert("Learning Rate harus diisi", JOptionPane.WARNING_MESSAGE);
@@ -1995,6 +1921,10 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtLRFocusLost
 
+    /**
+     * validasi textfield jumlah hidden layer
+     * @param evt
+     */
     private void txtJmlHiddenLayerFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtJmlHiddenLayerFocusLost
         if (this.txtJmlHiddenLayer.getText().isEmpty()) {
             showAlert("Hidden Layer harus diisi", JOptionPane.WARNING_MESSAGE);
@@ -2005,6 +1935,10 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtJmlHiddenLayerFocusLost
 
+    /**
+     * validasi textfield min random
+     * @param evt
+     */
     private void txtMinRandomFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMinRandomFocusLost
         if (this.txtMinRandom.getText().isEmpty()) {
             showAlert("Minimum Random harus diisi", JOptionPane.WARNING_MESSAGE);
@@ -2019,6 +1953,10 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtMinRandomFocusLost
 
+    /**
+     * validasi textfield max random
+     * @param evt
+     */
     private void txtMaxRandomFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxRandomFocusLost
         if (this.txtMaxRandom.getText().isEmpty()) {
             showAlert("Maksimum Random harus diisi", JOptionPane.WARNING_MESSAGE);
@@ -2033,11 +1971,10 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtMaxRandomFocusLost
 
-    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
-        refreshTableData();
-        this.txtBobotAkhir.setText(db.getBobot());
-    }//GEN-LAST:event_jTabbedPane1MouseClicked
-
+    /**
+     * validasi textfield target
+     * @param evt
+     */
     private void txtTesTargetFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTesTargetFocusLost
         String targetDefault = "000001";
         if (this.txtTesTarget.getText().length() != 6) {
@@ -2049,6 +1986,10 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtTesTargetFocusLost
 
+    /**
+     * Action untuk mengahpus semua data yg ada di list input image
+     * @param evt
+     */
     private void btBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBatalActionPerformed
         for (int i = 0; i < listInput.size(); i++) {
             listInput.remove(i);
@@ -2062,6 +2003,10 @@ public class Main extends javax.swing.JFrame {
         counterId = 0;
     }//GEN-LAST:event_btBatalActionPerformed
 
+    /**
+     * Action untuk browse image input 2
+     * @param evt
+     */
     private void btBrowse2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBrowse2ActionPerformed
         JFileChooser jfc = new JFileChooser(new File("images"));
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -2073,6 +2018,10 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btBrowse2ActionPerformed
 
+    /**
+     * Action untuk browse image input 3
+     * @param evt
+     */
     private void btBrowse3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBrowse3ActionPerformed
         JFileChooser jfc = new JFileChooser(new File("images"));
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -2083,10 +2032,6 @@ public class Main extends javax.swing.JFrame {
             fileTmp[2] = jfc.getSelectedFile();
         }
     }//GEN-LAST:event_btBrowse3ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        debug();
-    }//GEN-LAST:event_jButton1ActionPerformed
     public void showAlert(String message, int type) {
         JOptionPane.showMessageDialog(this, message, "Info", JOptionPane.WARNING_MESSAGE);
     }
@@ -2098,6 +2043,7 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
+                //set look & feel
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     new Main().setVisible(true);
@@ -2129,7 +2075,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnRecognize;
     private javax.swing.JButton btnTesTraining;
     private javax.swing.JCheckBox cbDefaultParam;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

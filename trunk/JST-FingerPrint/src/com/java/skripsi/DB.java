@@ -24,6 +24,9 @@ public class DB {
 
     Connection connection;
 
+    /**
+     * membuka koneksi ke database
+     */
     public DB() {
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost/db_jst_fz", "root", "admin");
@@ -32,6 +35,10 @@ public class DB {
         }
     }
 
+    /**
+     * mendapatkan id terbaru dari database
+     * @return new id
+     */
     public int getNewId() {
         int id = -1;
         try {
@@ -46,6 +53,10 @@ public class DB {
         return id + 1;
     }
 
+    /**
+     * mendapatkan bobot akhir JST
+     * @return bobot akhir
+     */
     public String getBobot() {
         String result = "";
         try {
@@ -60,6 +71,10 @@ public class DB {
         return result;
     }
 
+    /**
+     * memasukkan data fingerprint ke database
+     * @param fp objek fingerprint
+     */
     public void insertData(FingerPrint fp) {
         try {
             if (fp.getId() != 0) {
@@ -99,6 +114,10 @@ public class DB {
         }
     }
 
+    /**
+     * menghapus data fingerprint dari database
+     * @param id id fingerprint yg akan dihapus
+     */
     public void deleteData(int id) {
         try {
             PreparedStatement psmnt = connection.prepareStatement("delete from tbl_fp where id_fp=?");
@@ -109,6 +128,9 @@ public class DB {
         }
     }
 
+    /**
+     * mendapatkan semua data fingerprint dari database
+     */
     public ArrayList<FingerPrint> getData() {
         ArrayList<FingerPrint> list = new ArrayList<FingerPrint>();
         FingerPrint fp;
@@ -144,6 +166,11 @@ public class DB {
         return list;
     }
 
+    /**
+     * mendapatkan data fingerprint berdasar id
+     * @param id    id fingerprint
+     * @return objek fingerprint
+     */
     public FingerPrint getData(int id) {
         FingerPrint fp = null;
         byte[] buf = new byte[1024];
@@ -178,6 +205,10 @@ public class DB {
         return fp;
     }
 
+    /**
+     * update bobot akhir JST di database
+     * @param bobot bobot baru
+     */
     public void updateBobotData(String bobot) {
         try {
             PreparedStatement psmnt = connection.prepareStatement("update tbl_bobot set bobot =? where idbobot= 1");

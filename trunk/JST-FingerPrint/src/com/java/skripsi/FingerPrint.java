@@ -3,7 +3,9 @@
  * and open the template in the editor.
  */
 package com.java.skripsi;
-
+/**
+ * Objek fingerprint
+ */
 public class FingerPrint {
 
     private int id;
